@@ -4,7 +4,7 @@ import { createOrderSchema } from "@/lib/validators";
 import { calcCartIgv } from "@/lib/tax";
 import { calcShipping, getZone } from "@/lib/shipping";
 import { generateOrderId } from "@/lib/izipay";
-import { db, validateStockAtomically, type MockOrder } from "@/lib/db";
+import { prisma, validateStockAtomically, createOrderWithItems } from "@/lib/db";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { getProductById } from "@/lib/products";
 
@@ -41,7 +41,6 @@ export async function POST(request: Request) {
   }
   const data = parsed.data;
 
-  // Server-side terms acceptance check
   if (!data.acceptedTermsAt) {
     return NextResponse.json(
       { error: "Falta confirmación de Términos y Privacidad" },
@@ -49,8 +48,7 @@ export async function POST(request: Request) {
     );
   }
 
-  // ---------- atomic stock validation (prisma.$transaction in production) ----------
-  const failed = validateStockAtomically(data.items);
+  const failed = await validateStockAtomically(data.items);
   if (failed.length > 0) {
     return NextResponse.json(
       { error: "OUT_OF_STOCK", items: failed },
@@ -58,7 +56,6 @@ export async function POST(request: Request) {
     );
   }
 
-  // ---------- compute totals ----------
   const itemsWithPrice = data.items.map((it) => {
     const product = getProductById(it.productId);
     if (!product) {
@@ -82,7 +79,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Zona de envío inválida" }, { status: 400 });
   }
 
-  // ---------- create order ----------
   let orderNumber: string;
   try {
     orderNumber = generateOrderId();
@@ -93,18 +89,14 @@ export async function POST(request: Request) {
     );
   }
 
-  const now = new Date().toISOString();
-  const order: MockOrder = {
-    id: `o_${Date.now().toString(36)}`,
+  const order = await createOrderWithItems({
     orderNumber,
     status: data.paymentMethod === "transfer" ? "pending_verification" : "pending",
-    paymentStatus: "pending",
     paymentMethod: data.paymentMethod,
     paymentId: data.paymentId,
     installments: data.installments ?? 1,
     invoiceType: data.invoiceType,
-    documentType: data.customer.documentType,
-    documentNumber: data.customer.documentNumber,
+    acceptedTermsAt: data.acceptedTermsAt,
     customer: data.customer,
     items: itemsWithPrice,
     subtotalNet: igvCalc.net,
@@ -112,12 +104,7 @@ export async function POST(request: Request) {
     subtotalGross,
     shipping,
     total,
-    acceptedTermsAt: data.acceptedTermsAt,
-    createdAt: now,
-    updatedAt: now,
-  };
-
-  db.order.create(order);
+  });
 
   // NOTE: stock is NOT decremented here — only after webhook confirms payment.
 
@@ -125,7 +112,7 @@ export async function POST(request: Request) {
     {
       orderNumber: order.orderNumber,
       orderId: order.id,
-      total: order.total,
+      total: Number(order.total),
       status: order.status,
     },
     { status: 201 }
@@ -138,7 +125,10 @@ export async function GET(request: Request) {
   if (!id) {
     return NextResponse.json({ error: "id requerido" }, { status: 400 });
   }
-  const order = db.order.findById(id);
+  const order = await prisma.order.findUnique({
+    where: { id },
+    include: { items: true, customer: true },
+  });
   if (!order) return NextResponse.json({ error: "No encontrado" }, { status: 404 });
   return NextResponse.json(order);
 }

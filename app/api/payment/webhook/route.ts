@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { validateWebhook, mapPaymentStatus } from "@/lib/izipay";
-import { db, decrementStock } from "@/lib/db";
+import { prisma, decrementStock } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +21,10 @@ export async function POST(request: Request) {
   const payload = validation.payload;
 
   // Idempotency: if we already processed this paymentId successfully, ack and skip.
-  const existing = db.order.findByPaymentId(payload.paymentId);
+  const existing = await prisma.order.findUnique({
+    where: { paymentId: payload.paymentId },
+    include: { items: true },
+  });
   if (existing && existing.paymentStatus === "completed" && existing.status === "paid") {
     return NextResponse.json({ ok: true, status: "already_processed" });
   }
@@ -33,25 +36,38 @@ export async function POST(request: Request) {
   }
 
   // Find order: prefer paymentId match, then orderNumber.
-  const order = existing ?? db.order.findByOrderNumber(payload.orderId);
+  const order =
+    existing ??
+    (await prisma.order.findUnique({
+      where: { orderNumber: payload.orderId },
+      include: { items: true },
+    }));
   if (!order) {
     // Order may not exist yet (race). Ack 200 — Izipay reconciliation will retry.
     return NextResponse.json({ ok: true, status: "no_matching_order" });
   }
 
   if (mapped === "paid") {
-    db.order.update(order.id, {
-      status: "paid",
-      paymentStatus: "completed",
-      paymentId: payload.paymentId,
+    await prisma.order.update({
+      where: { id: order.id },
+      data: {
+        status: "paid",
+        paymentStatus: "completed",
+        paymentId: payload.paymentId,
+      },
     });
     // Stock decrements ONLY on confirmed payment — not at order creation.
-    decrementStock(order.items.map((i) => ({ productId: i.productId, quantity: i.quantity })));
+    await decrementStock(
+      order.items.map((i) => ({ productId: i.productId, quantity: i.quantity }))
+    );
   } else {
-    db.order.update(order.id, {
-      status: "cancelled",
-      paymentStatus: "failed",
-      paymentId: payload.paymentId,
+    await prisma.order.update({
+      where: { id: order.id },
+      data: {
+        status: "cancelled",
+        paymentStatus: "failed",
+        paymentId: payload.paymentId,
+      },
     });
   }
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { complaintSchema } from "@/lib/validators";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { generateComplaintNumber } from "@/lib/izipay";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
@@ -27,19 +28,32 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
+  const data = parsed.data;
 
-  const seq = db.complaint.nextSeq();
+  // Sequential complaint number — uses the current row count + 1. For low
+  // volume this is fine; if concurrency becomes a real concern, replace with
+  // a Postgres sequence keyed to the complaint table.
+  const seq = (await prisma.complaint.count()) + 1;
   const complaintNumber = generateComplaintNumber(seq);
-  const now = new Date().toISOString();
 
-  const created = db.complaint.create({
-    id: `lr_${Date.now().toString(36)}`,
-    complaintNumber,
-    status: "pendiente",
-    type: parsed.data.type,
-    fullName: parsed.data.fullName,
-    email: parsed.data.email,
-    createdAt: now,
+  const created = await prisma.complaint.create({
+    data: {
+      complaintNumber,
+      type: data.type,
+      fullName: data.fullName,
+      documentType: data.documentType,
+      documentNumber: data.documentNumber,
+      email: data.email,
+      phone: data.phone,
+      address: data.address,
+      isMinor: data.isMinor,
+      guardianName: data.guardianName,
+      goodType: data.goodType,
+      amount: data.amount != null ? new Prisma.Decimal(data.amount) : null,
+      description: data.description,
+      detail: data.detail,
+      request: data.request,
+    },
   });
 
   // TODO: enviar email al consumidor con copia del reclamo (integrar con SendGrid / SES).
