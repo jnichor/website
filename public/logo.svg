@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64" fill="none">
+  <rect width="64" height="64" rx="14" fill="#0A2540"/>
+  <path d="M22 18h6l8 12V18h6v28h-6l-8-12v12h-6V18z" fill="#00D2FF"/>
+  <text x="80" y="42" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="22" fill="#0A2540">NovaTech</text>
+</svg>
