@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { Loader2, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
