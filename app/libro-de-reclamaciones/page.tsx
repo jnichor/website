@@ -4,7 +4,7 @@ import { ComplaintForm } from "@/components/complaint/ComplaintForm";
 export const metadata: Metadata = {
   title: "Libro de Reclamaciones",
   description:
-    "Libro de Reclamaciones virtual conforme al D.S. 011-2011-PCM. Registrá tu reclamo o queja.",
+    "Libro de Reclamaciones virtual conforme al D.S. 011-2011-PCM. Registra tu reclamo o queja.",
 };
 
 const COMPANY_LEGAL = process.env.COMPANY_LEGAL_NAME ?? "NovaTech Hardware S.A.C.";

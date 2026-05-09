@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   const rl = rateLimit(`orders:${ip}`, { max: 5, windowMs: 60_000 });
   if (!rl.allowed) {
     return NextResponse.json(
-      { error: "Demasiadas solicitudes. Intentá de nuevo en un minuto." },
+      { error: "Demasiadas solicitudes. Intenta de nuevo en un minuto." },
       { status: 429 }
     );
   }

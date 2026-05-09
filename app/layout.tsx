@@ -6,6 +6,9 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { TopBar } from "@/components/layout/TopBar";
 import { CookieBanner } from "@/components/layout/CookieBanner";
+import { FloatingWhatsApp } from "@/components/layout/FloatingWhatsApp";
+import { ScrollToTop } from "@/components/layout/ScrollToTop";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -107,17 +110,30 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <html lang="es-PE" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+    <html
+      lang="es-PE"
+      className={`${inter.variable} ${spaceGrotesk.variable}`}
+      suppressHydrationWarning
+    >
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
-        <a href="#main" className="skip-link">
-          Saltar al contenido
-        </a>
-        <TopBar />
-        <Header />
-        <main id="main">{children}</main>
-        <Footer />
-        <CookieBanner />
-        <Toaster position="top-right" richColors />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <a href="#main" className="skip-link">
+            Saltar al contenido
+          </a>
+          <TopBar />
+          <Header />
+          <main id="main">{children}</main>
+          <Footer />
+          <FloatingWhatsApp />
+          <ScrollToTop />
+          <CookieBanner />
+          <Toaster position="top-right" richColors />
+        </ThemeProvider>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}

@@ -1,0 +1,510 @@
+{
+  "_comment": "Map productId -> sourceUrls. Run `npm run images:download` to fetch all images to public/products/<id>/. Then `npx tsx scripts/normalize-product-images.ts` to convert to JPEG.",
+
+  "p001": {
+    "_name": "ASUS ROG Strix G16 (2024) RTX 4070",
+    "sourceUrls": [
+      "https://dlcdnwebimgs.asus.com/gain/CFE9CB59-216D-4AC9-AEAE-10054506055C/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/2EC328E4-7529-4CB5-A797-3B13E84D4664/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/E1907459-5DC4-4C64-BF3B-06E5CE1FB406/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/26B3DFC8-6783-4FAB-BA61-D1A0AE10ED26/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/5CA99398-7772-4CA9-8857-D19D4B0E5DD5/w1000/h732"
+    ]
+  },
+  "p015": {
+    "_name": "ASUS ROG Strix B850-E Gaming WiFi",
+    "sourceUrls": [
+      "https://dlcdnwebimgs.asus.com/gain/A5A5CF00-C00B-4E6F-9470-6CDB3B0BE5ED/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/E68143F9-9C20-4C1F-A5F4-9B05892BA717/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/D2B25434-E0B3-490B-A3FE-87FB783C626D/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/E8943F54-1A73-403E-A0BE-4CC7D87D2C55/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/48100F04-AE15-4271-9CCC-D5FD9BBB3DDA/w1000/h732"
+    ]
+  },
+  "p025": {
+    "_name": "ASUS ROG Azoth 75% Wireless",
+    "sourceUrls": [
+      "https://dlcdnwebimgs.asus.com/gain/145896AC-B462-4466-A1FE-935F085741F3/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/5707EC06-11F9-4721-B9F4-A028270E5249/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/46B0C265-BF5B-44A4-AE54-A707FFC900E2/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/448D9961-E230-4F24-B3C5-E61C956602EA/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/E75C2F67-34F6-48BE-A27B-94BCF33FE8B7/w1000/h732"
+    ]
+  },
+  "p028": {
+    "_name": "Dell UltraSharp U3225QE 4K 32",
+    "sourceUrls": [
+      "https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/peripherals/monitors/u-series/u3225qe/media-gallery/monitor-ultrasharp-u3225qe-gy-gallery-1.psd?fmt=jpg&wid=2000&hei=2000&qlt=90",
+      "https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/peripherals/monitors/u-series/u3225qe/media-gallery/monitor-ultrasharp-u3225qe-gy-gallery-2.psd?fmt=jpg&wid=2000&hei=2000&qlt=90"
+    ]
+  },
+  "p029": {
+    "_name": "ASUS ROG Swift PG32UCDM 4K QD-OLED",
+    "sourceUrls": [
+      "https://dlcdnwebimgs.asus.com/gain/B6C7913A-2EF9-4096-9B09-3505E103E5D2/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/496B6E55-D502-4A81-A7D0-F4DE043BEEBF/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/17E680C7-2101-4F5F-8E07-743CEB71FD0D/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/6242673E-AA37-41E7-96FC-98993AE45B45/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/7320BF15-292B-4AE5-922A-3A78DB762000/w1000/h732"
+    ]
+  },
+  "p030": {
+    "_name": "ASUS ROG Rapture GT-BE98 Pro Wi-Fi 7",
+    "sourceUrls": [
+      "https://dlcdnwebimgs.asus.com/gain/8797D1A5-C36B-4E11-8962-CBFAFC606EEF/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/41D8F463-6F1E-4B20-9F59-EEC7C2814D79/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/8D09BE55-94B6-43E6-89B5-AB9F40A31BF6/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/101BEDB6-1134-4BF4-B9CE-18CFC8AE5C11/w1000/h732"
+    ]
+  },
+  "p040": {
+    "_name": "ASUS ROG Strix Scar 18 (2024) RTX 4090",
+    "sourceUrls": [
+      "https://dlcdnwebimgs.asus.com/gain/29ADB838-6337-4979-9CD7-09ECB34BA05F/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/D74427DA-DCDE-47A0-940E-55AB6A4A8346/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/DF4F1831-E8A6-40DE-901A-197FE90A7342/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/5E8C6992-C835-4DB4-B1CB-B5E1C9C3F4AF/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/6CAF86A2-1F1B-462F-AE43-8A4E748134F8/w1000/h732"
+    ]
+  },
+  "p041": {
+    "_name": "ASUS Chromebook CX15 (CX1505CKA)",
+    "sourceUrls": [
+      "https://dlcdnwebimgs.asus.com/gain/3e9dd881-ac2f-4785-bbf8-aec52f3218d9/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/691fd2c5-8070-4bc6-9189-3c1f2365e97e/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/479ad2b3-44e3-4c5a-9c79-213f4e416d36/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/44c2a11b-04fe-40b5-ad73-f12c3aee5c92/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/71935931-7a4e-4110-a593-e8a513fcd359/w1000/h732"
+    ]
+  },
+  "p042": {
+    "_name": "ASUS TUF Gaming F16 (2025) i5 + RTX 5050",
+    "sourceUrls": [
+      "https://dlcdnwebimgs.asus.com/gain/425797b1-a292-4654-a846-a2898f7b9cf5/w1000/h732"
+    ]
+  },
+  "p043": {
+    "_name": "Razer Blade 14 (Ryzen 9 6900HX + RTX 3070 Ti) — 4 infographic URLs filtered out",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71wk6LgSmoL._SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81yLVBQfkTL._SL1500_.jpg"
+    ]
+  },
+  "p044": {
+    "_name": "Acer Predator Helios Neo 16 AI (Ultra 9 + RTX 5070 Ti)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/712iCgpr3NL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71WGfvkin5L._AC_SL1400_.jpg",
+      "https://m.media-amazon.com/images/I/71hIg5LyBQL._AC_SL1400_.jpg",
+      "https://m.media-amazon.com/images/I/716H4RPHWbL._AC_SL1400_.jpg",
+      "https://m.media-amazon.com/images/I/81ZqqeUoB1L._AC_SL1400_.jpg"
+    ]
+  },
+  "p045": {
+    "_name": "Acer Nitro V Gaming (i7-13620H + RTX 4050)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/719MpRszpCL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/818EbOcBu8L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61MUSeN4fxL._AC_SL1250_.jpg",
+      "https://m.media-amazon.com/images/I/71Qp6RedIvL._AC_SL1250_.jpg",
+      "https://m.media-amazon.com/images/I/716reKZcfzL._AC_SL1250_.jpg"
+    ]
+  },
+  "p046": {
+    "_name": "Gigabyte AERO X16 Copilot+ (Ryzen AI 7 350 + RTX 5060)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/61GXnO-NpNL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71e2EbxqzAL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71aGqtPJs6L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71SnWP9VFHL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71z82jMwbuL._AC_SL1500_.jpg"
+    ]
+  },
+  "p047": {
+    "_name": "Gigabyte A16 Gaming (Ryzen 7 260 + RTX 5060)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71IQDeOi4nL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81yjKVgqYAL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81LmLuZNAyL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71osdkoLHtL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/819PC0naUML._AC_SL1500_.jpg"
+    ]
+  },
+  "p048": {
+    "_name": "Lenovo Legion 5i (i7-14700HX + RTX 5070 + OLED)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71NH5OWN9uL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71mBtyfpmRL._AC_SL1476_.jpg",
+      "https://m.media-amazon.com/images/I/61b29ldAFoL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61DO2hNmCCL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71B+2BxjFcL._AC_SL1500_.jpg"
+    ]
+  },
+  "p049": {
+    "_name": "Evounic Gaming PC Xeon E5 + RTX 2080 Ti",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71tA5fk1p5L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/714teD6v5hL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/712WOXrb0ZL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/718bXi9u1SL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/718t-SgV6LL._AC_SL1500_.jpg"
+    ]
+  },
+  "p050": {
+    "_name": "Apple iMac 2024 M4 24'' Green",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71Aj4Aq9GRL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71ZijdvWGIL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71gzppIcajL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81niMbuB0HL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81V3VYJaxkL._AC_SL1500_.jpg"
+    ]
+  },
+  "p051": {
+    "_name": "Apple Mac Mini 2023 M2 Pro 16GB/512GB (Renewed)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/61CKH6YI0ZL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71PeiT+dDGL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61La8PAa42L._AC_SL1500_.jpg"
+    ]
+  },
+  "p052": {
+    "_name": "Dell OptiPlex 7070 SFF i7-9700 32GB (Renewed)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/61GGkjt2U+L._AC_SL1080_.jpg",
+      "https://m.media-amazon.com/images/I/61VMsqZ8fUL._AC_SL1350_.jpg",
+      "https://m.media-amazon.com/images/I/61BpgsIQFvL._AC_SL1350_.jpg",
+      "https://m.media-amazon.com/images/I/614X5WdngUL._AC_SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/61xHarC-vWL._AC_SL1500_.jpg"
+    ]
+  },
+  "p053": {
+    "_name": "Dell OptiPlex 3070 Micro i5-9500 (Renewed)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71cFrieR1iL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61JD63kzHuL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71+QfLV3a4L._AC_SL1500_.jpg"
+    ]
+  },
+  "p054": {
+    "_name": "Gigastone Game Turbo PCIe Gen4 1TB (2-Pack)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/61M7amYHkoL._AC_SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/61qrZMzx0WL._AC_SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/619W8v+0oJL._AC_SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/71sqzA22t1L._AC_SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/61CLIvaCjJL._AC_SL1000_.jpg"
+    ]
+  },
+  "p055": {
+    "_name": "SIX X7400 NVMe M.2 SSD PCIe 4.0 1TB",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71gk6okbBcL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71wptFbys1L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71VWPhpPD9L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/715bUZbGtcL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71kfJIvvnyL._AC_SL1500_.jpg"
+    ]
+  },
+  "p056": {
+    "_name": "WD Black SN7100 1TB NVMe Gen4",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/61uDl4amtnL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71EMRfxsYCL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61IAd6smZjL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/7119XHV4NvL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/810KMuhATlL._AC_SL1500_.jpg"
+    ]
+  },
+  "p057": {
+    "_name": "Fanxiang S690Q 1TB NVMe Gen4 (PS5 ready)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71V1Egp18mL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71eQsu9F4GL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71G+rcF2yOL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71De8JXZaCL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71IEzXgWwgL._AC_SL1500_.jpg"
+    ]
+  },
+  "p058": {
+    "_name": "Sony WH-1000XM5 Wireless Noise Cancelling Headphones",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/61vJtKbAssL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81V1VCLb4oL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81gW2Vb93RL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81zk7HFkz7L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81kCCjRFZTL._AC_SL1500_.jpg"
+    ]
+  },
+  "p059": {
+    "_name": "Sony WF-1000XM5 True Wireless Earbuds",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/61GJAFdM9pL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/91rBRERHmoL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/91006H3xoFL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81ULbDNPJ0L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/913a-1k0tfL._AC_SL1500_.jpg"
+    ]
+  },
+  "p060": {
+    "_name": "Sony WH-CH720N Noise Cancelling Wireless Headphones (White)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/81L8FJQd5nL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/91hx2gnY0qL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81Y1Mr0iVWL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81ZItrs+cLL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71hQC0mJ9BL._AC_SL1500_.jpg"
+    ]
+  },
+  "p061": {
+    "_name": "JBL Go 4 Ultra-Portable Bluetooth Speaker",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71yLyiSmJRL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71poD4VQFwL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71EYHS-LKGL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61UNOlQWXeL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61Sy+7LX0fL._AC_SL1500_.jpg"
+    ]
+  },
+  "p062": {
+    "_name": "CHIFENCHY Portable Bluetooth Speaker (IPX5)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/81p9DPknjLL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71k2jpOwvRL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/715N8ZB7YLL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81arY2ozMAL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71atAQrlXmL._AC_SL1500_.jpg"
+    ]
+  },
+  "p063": {
+    "_name": "Razer Basilisk V3 Gaming Mouse (26K DPI)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/61AcT0ZuO3L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71ogW8jLA+L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81Sr2YceKWL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61Y-Zb0WVtL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61apxCWQUgL._AC_SL1500_.jpg"
+    ]
+  },
+  "p064": {
+    "_name": "Redragon Wireless Gaming Mouse 8000 DPI",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/61QY3V6A-NL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71RM5vVmMvL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71NgFttSOuL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81QuOtLR9iL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71F5x8kIP5L._AC_SL1500_.jpg"
+    ]
+  },
+  "p065": {
+    "_name": "Glorious Model D Wireless 69g Superlight (Matte White)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71smsucDsZL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/612zzeZh8iL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61x75FM8XkL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61EcjPTsGUL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71KxlmYnoOL._AC_SL1500_.jpg"
+    ]
+  },
+  "p066": {
+    "_name": "Logitech G502 Hero (only 2 hi-res available)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/51PNyeVCKZL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/41NE0+irzTL._AC_SL1417_.jpg"
+    ]
+  },
+  "p067": {
+    "_name": "Logitech G203 LIGHTSYNC RGB (White)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/61Svxx4yC5L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71KXZ+IdrPL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71kokm+ETlL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61rG9mrOTfL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61qBttTvqFL._AC_SL1500_.jpg"
+    ]
+  },
+  "p068": {
+    "_name": "Logitech G502 X Lightspeed Wireless (Black)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/61-F0KQym0L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71emTGe2k3L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71bzf5GSvML._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71Gh2E53hlL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71hsmft2I5L._AC_SL1500_.jpg"
+    ]
+  },
+  "p069": {
+    "_name": "TP-Link Archer AXE75 WiFi 6E AXE5400 Tri-Band",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/61H4eNHnzcL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61nu9-VJx7L._AC_SL1434_.jpg",
+      "https://m.media-amazon.com/images/I/71+NBY46-xL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81RafrX+IoL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61-fhs6ZDNL._AC_SL1500_.jpg"
+    ]
+  },
+  "p070": {
+    "_name": "MSI Radix AXE6600 WiFi 6E Tri-Band Gaming Router",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/61Bchl940mL._AC_SL1351_.jpg",
+      "https://m.media-amazon.com/images/I/71BmP6I0PXL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71bf-yTcMOL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71Jlb-01kpL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71xgc9k7RdL._AC_SL1500_.jpg"
+    ]
+  },
+  "p071": {
+    "_name": "ASUS RT-AX82U AX5400 WiFi 6 Gaming Router (Renewed)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71+zU9ocbcL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/715XXzVI80L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81q4AnES1rL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81lXj9439GL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71Q7F8xg3CL._AC_SL1500_.jpg"
+    ]
+  },
+  "p072": {
+    "_name": "KOORUI 27'' Gaming Monitor 200Hz FHD HDR400 IPS (G2711P)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71XLC-2JiDL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71wiQ-ou3bL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71bDx-+2VaL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71zxtg1kDuL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81MIE8h6KEL._AC_SL1500_.jpg"
+    ]
+  },
+  "p073": {
+    "_name": "INNOCN 40C1R Ultrawide 40'' WQHD 144Hz HDR400 (21:9)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/717L1q4PEcL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71E8PkcA5IL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/812+777suXL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/810Z1WVBbyL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71TXiyVywbL._AC_SL1500_.jpg"
+    ]
+  },
+  "p074": {
+    "_name": "CRUA 32'' Curved Gaming Monitor 240Hz FHD VA",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71apC4YZQGL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61a9hToZafL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81QHFr+yS1L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81jogo77yBL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/819WVqizbwL._AC_SL1500_.jpg"
+    ]
+  },
+  "p075": {
+    "_name": "CRUA 27'' Curved Gaming Monitor FHD 180Hz VA",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71Q6UrR1n1L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61GuFCLl09L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/710CKC2BXEL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71Y+7xtAhaL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71NInQ9p+IL._AC_SL1500_.jpg"
+    ]
+  },
+  "p076": {
+    "_name": "KTC H27S5C 27'' Curved 1440p QHD 144Hz HDR400",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71s4iClDxjL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71imkqFB8FL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71t06zqlnmL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71o-zSm1cwL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/712zwvpfPsL._AC_SL1500_.jpg"
+    ]
+  },
+  "p077": {
+    "_name": "Z-Edge UG27H 27'' Curved Gaming 300Hz FHD 1ms",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71JpQHlS42L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71UxPSEh46L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71U5xbOYSwL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71NRsCX8fgL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71uw5t1WGkL._AC_SL1500_.jpg"
+    ]
+  },
+  "p078": {
+    "_name": "AMD Ryzen 5 5500 6-core Wraith Stealth",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/81Y7WoyvFjL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81-ohhrrgwL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61xtcgV098L._AC_SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/81N7iHCxTML._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81lyks0XCcL._AC_SL1500_.jpg"
+    ]
+  },
+  "p079": {
+    "_name": "AMD Ryzen 7 9800X3D 8-core (only 3 hi-res)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71NMFO0iUhL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71KDfkysoeL._AC_SL1500_.jpg"
+    ]
+  },
+  "p080": {
+    "_name": "Intel Core i9-14900K (4 imgs)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/619ytLAytAL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61f8hqeg-dL._AC_SL1080_.jpg",
+      "https://m.media-amazon.com/images/I/61x6XuKeEGL._AC_SL1080_.jpg",
+      "https://m.media-amazon.com/images/I/61ujd7RN-3L._AC_SL1500_.jpg"
+    ]
+  },
+  "p081": {
+    "_name": "Intel Core Ultra 9 285K (3 hi-res)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/61VD0NJ26QL._AC_SL1080_.jpg",
+      "https://m.media-amazon.com/images/I/71cmGx3gZtL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61+sHdtKbSL._AC_SL1080_.jpg"
+    ]
+  },
+  "p082": {
+    "_name": "ASUS ROG Strix B850-F Gaming WiFi",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/81tBiDJ-eSL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81xKGku371L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81XjCyie5+L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71iFkfDccuL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81xqNyUqpuL._AC_SL1500_.jpg"
+    ]
+  },
+  "p083": {
+    "_name": "MSI B550M PRO-VDH WiFi (Micro-ATX)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/61HOwOmsAiL._AC_SL1150_.jpg",
+      "https://m.media-amazon.com/images/I/617iDu8l8VL._AC_SL1024_.jpg",
+      "https://m.media-amazon.com/images/I/61OwKOr0GyL._AC_SL1024_.jpg",
+      "https://m.media-amazon.com/images/I/616IVaJSpJL._AC_SL1024_.jpg",
+      "https://m.media-amazon.com/images/I/71Mumt38AtL._AC_SL1280_.jpg"
+    ]
+  },
+  "p084": {
+    "_name": "ASUS ROG Strix B550-F Gaming WiFi II",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/81S9D7bqEzL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81WbvasurPL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81Pnt9GkS2L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81c-oxS8+VL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81k8LENCYEL._AC_SL1500_.jpg"
+    ]
+  },
+  "p085": {
+    "_name": "ASUS TUF Gaming B550-PLUS WiFi II",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/81YQ4O9m1TL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81lTqmuAi6L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81UpK8Cvq4L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/91iNAhjhnpL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/91cCde+sH1L._AC_SL1500_.jpg"
+    ]
+  },
+  "p086": {
+    "_name": "GIGABYTE B550 Gaming X V2 (ATX)",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/81A2DlnZuBL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/6111DwAtKIL._AC_SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/61uCyTykVRL._AC_SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/715rTStv82L._AC_SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/81HyYYlfU6L._AC_SL1500_.jpg"
+    ]
+  }
+}

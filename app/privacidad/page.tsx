@@ -60,8 +60,8 @@ export default function PrivacyPage() {
       <section>
         <h2 className="font-display text-xl font-semibold">5. Derechos ARCO</h2>
         <p className="mt-2">
-          Tenés derecho a Acceder, Rectificar, Cancelar u Oponerte al tratamiento de tus datos
-          personales. Podés ejercerlos enviando un email a{" "}
+          Tienes derecho a Acceder, Rectificar, Cancelar u Oponerte al tratamiento de tus datos
+          personales. Puedes ejercerlos enviando un email a{" "}
           <a className="text-primary underline" href="mailto:dpo@novatechhardware.pe">
             dpo@novatechhardware.pe
           </a>{" "}
@@ -73,7 +73,7 @@ export default function PrivacyPage() {
         <h2 className="font-display text-xl font-semibold">6. Cookies</h2>
         <p className="mt-2">
           Usamos cookies técnicas (necesarias para el carrito), analíticas (con consentimiento) y
-          de marketing (con consentimiento). Podés configurar tus preferencias en el banner inicial
+          de marketing (con consentimiento). Puedes configurar tus preferencias en el banner inicial
           o limpiando las cookies del navegador.
         </p>
       </section>
@@ -90,7 +90,7 @@ export default function PrivacyPage() {
       <section>
         <h2 className="font-display text-xl font-semibold">8. Autoridad de control</h2>
         <p className="mt-2">
-          Si considerás que tus derechos no fueron respetados, podés presentar reclamo ante la
+          Si consideras que tus derechos no fueron respetados, puedes presentar reclamo ante la
           Autoridad Nacional de Protección de Datos Personales (Minjus).
         </p>
       </section>

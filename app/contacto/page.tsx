@@ -19,7 +19,7 @@ const FAQS = [
   },
   {
     q: "¿Emiten factura para empresas?",
-    a: "Sí. En el checkout podés elegir Boleta (DNI) o Factura (RUC). La factura electrónica llega por email.",
+    a: "Sí. En el checkout puedes elegir Boleta (DNI) o Factura (RUC). La factura electrónica llega por email.",
   },
   {
     q: "¿Aceptan Yape y Plin?",
@@ -38,7 +38,7 @@ export default function ContactPage() {
         <div className="container mx-auto px-4">
           <h1 className="font-display text-4xl font-bold md:text-5xl">Contacto</h1>
           <p className="mt-3 max-w-2xl text-primary-foreground/80">
-            Estamos para ayudarte. Elegí el canal que prefieras.
+            Estamos para ayudarte. Elige el canal que prefieras.
           </p>
         </div>
       </section>
@@ -72,7 +72,7 @@ export default function ContactPage() {
 
         <div className="mt-12 grid gap-12 lg:grid-cols-2">
           <div>
-            <h2 className="font-display text-2xl font-bold">Escribinos</h2>
+            <h2 className="font-display text-2xl font-bold">Escríbenos</h2>
             <p className="mt-2 text-sm text-muted-foreground">
               Te respondemos en menos de 1 hora hábil.
             </p>

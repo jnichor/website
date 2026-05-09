@@ -138,3 +138,159 @@ h6 {
     scroll-behavior: auto !important;
   }
 }
+
+/* =========================================================================
+   Premium product page motion + effects
+   ========================================================================= */
+
+/* Slowly drifting blobs that compose a "mesh gradient" background. Each blob
+   has its own period so they never repeat the same composition twice. */
+@keyframes drift-a {
+  0%   { transform: translate3d(-10%, -5%, 0) scale(1); }
+  50%  { transform: translate3d(15%, 10%, 0) scale(1.1); }
+  100% { transform: translate3d(-10%, -5%, 0) scale(1); }
+}
+@keyframes drift-b {
+  0%   { transform: translate3d(5%, 0%, 0) scale(1.05); }
+  50%  { transform: translate3d(-15%, 12%, 0) scale(1); }
+  100% { transform: translate3d(5%, 0%, 0) scale(1.05); }
+}
+@keyframes drift-c {
+  0%   { transform: translate3d(0%, 5%, 0) scale(1); }
+  50%  { transform: translate3d(20%, -10%, 0) scale(1.15); }
+  100% { transform: translate3d(0%, 5%, 0) scale(1); }
+}
+
+.blob-cyan,
+.blob-violet,
+.blob-pink {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  pointer-events: none;
+  will-change: transform;
+}
+.blob-cyan {
+  width: 40rem;
+  height: 40rem;
+  background: rgba(0, 210, 255, 0.35);
+  top: -10rem;
+  left: -10rem;
+  animation: drift-a 18s ease-in-out infinite;
+}
+.blob-violet {
+  width: 36rem;
+  height: 36rem;
+  background: rgba(139, 92, 246, 0.3);
+  bottom: -8rem;
+  right: -8rem;
+  animation: drift-b 22s ease-in-out infinite;
+}
+.blob-pink {
+  width: 28rem;
+  height: 28rem;
+  background: rgba(236, 72, 153, 0.18);
+  top: 30%;
+  left: 40%;
+  animation: drift-c 26s ease-in-out infinite;
+}
+
+/* Floating particles — small dots that twinkle in the background */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: translateY(0px); }
+  50%      { opacity: 0.8; transform: translateY(-8px); }
+}
+.particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 9999px;
+  background: rgba(0, 210, 255, 0.6);
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.8);
+  animation: twinkle 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Conic-gradient sweeping border on focused cards */
+@keyframes spin-border {
+  to { transform: rotate(360deg); }
+}
+.glow-border {
+  position: relative;
+  isolation: isolate;
+}
+.glow-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from 0deg,
+    transparent,
+    rgba(0, 210, 255, 0.6),
+    transparent 60%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: -1;
+}
+.glow-border:hover::before {
+  opacity: 1;
+  animation: spin-border 4s linear infinite;
+}
+
+/* Scroll reveal — base hidden state */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Marquee scroll for spec strip */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 30s linear infinite;
+}
+
+/* Typewriter / boot-sequence reveal for SKU */
+@keyframes type-reveal {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+@keyframes blink-caret {
+  50% { border-color: transparent; }
+}
+.boot-text {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid currentColor;
+  animation:
+    type-reveal 1.4s steps(20, end) 0.4s both,
+    blink-caret 0.7s step-end 6;
+}
+
+/* 3D tilt container — children use CSS variables --rx and --ry */
+.tilt-3d {
+  transform: perspective(1000px)
+             rotateY(var(--ry, 0deg))
+             rotateX(var(--rx, 0deg))
+             translateZ(0);
+  transition: transform 0.15s ease-out;
+  transform-style: preserve-3d;
+}

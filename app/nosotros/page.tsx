@@ -5,7 +5,7 @@ import { Award, Users, ShieldCheck, Cpu } from "lucide-react";
 export const metadata: Metadata = {
   title: "Nosotros",
   description:
-    "Conocé a NovaTech Hardware: 8 años especializándonos en componentes de PC, laptops gaming y soporte técnico en Lima.",
+    "Conoce a NovaTech Hardware: 8 años especializándonos en componentes de PC, laptops gaming y soporte técnico en Lima.",
 };
 
 const VALUES = [
@@ -16,7 +16,7 @@ const VALUES = [
 ];
 
 const TIMELINE = [
-  { year: "2017", title: "Apertura del local en Lince", text: "Empezamos con una vitrina y mucho amor por los fierros." },
+  { year: "2017", title: "Apertura del local en Lince", text: "Empezamos con una vitrina y mucho amor por el hardware." },
   { year: "2019", title: "Primera tienda online", text: "Lanzamos novatechhardware.pe con cobertura nacional." },
   { year: "2021", title: "Distribuidores oficiales ASUS y MSI", text: "Cerramos los primeros contratos de distribución directa." },
   { year: "2024", title: "Servicio técnico propio", text: "Inauguramos el laboratorio de garantía y armado de PCs." },
@@ -42,11 +42,11 @@ export default function AboutPage() {
             <p className="mt-4 leading-relaxed">
               Empezamos en 2017 como un local pequeño en Lince. Hoy somos uno de los
               referentes en hardware en Lima, con un equipo de técnicos certificados,
-              cobertura nacional y acuerdos de distribución directa con las marcas que más
-              confiás.
+              cobertura nacional y acuerdos de distribución directa con las marcas en las que más
+              confías.
             </p>
             <p className="mt-3 leading-relaxed">
-              Lo que no cambió: la honestidad de recomendarte lo que necesitás para tu uso real,
+              Lo que no cambió: la honestidad de recomendarte lo que necesitas para tu uso real,
               no lo que más nos conviene vender.
             </p>
           </div>

@@ -1,6 +1,7 @@
 import { Hero } from "@/components/home/Hero";
-import { TrustStats } from "@/components/home/TrustStats";
+import { SpecMarquee } from "@/components/home/SpecMarquee";
 import { CategoryGrid } from "@/components/home/CategoryGrid";
+import { Pillars } from "@/components/home/Pillars";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { BrandStrip } from "@/components/home/BrandStrip";
 import { WhyUs } from "@/components/home/WhyUs";
@@ -11,8 +12,9 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <TrustStats />
+      <SpecMarquee />
       <CategoryGrid />
+      <Pillars />
       <FeaturedProducts />
       <BrandStrip />
       <WhyUs />

@@ -106,7 +106,7 @@ export function PaymentForm({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="font-display text-lg font-semibold">Elegí tu método de pago</h3>
+        <h3 className="font-display text-lg font-semibold">Elige tu método de pago</h3>
         <p className="mt-1 text-sm text-muted-foreground">
           Aceptamos billeteras y tarjetas oficiales. Tu información viaja siempre cifrada.
         </p>
@@ -181,7 +181,7 @@ export function PaymentForm({
           />
           {brandMismatch && (
             <p className="text-xs text-destructive">
-              Estos dígitos parecen pertenecer a otra marca. Verificá el método elegido.
+              Estos dígitos parecen pertenecer a otra marca. Verifica el método elegido.
             </p>
           )}
         </div>
@@ -211,10 +211,10 @@ export function PaymentForm({
             </div>
           </div>
           <ol className="list-decimal space-y-1.5 pl-5 text-sm">
-            <li>Abrí la app de {config?.label}</li>
-            <li>Escaneá el QR de arriba</li>
-            <li>Ingresá el monto: S/ {amount.toFixed(2)}</li>
-            <li>Copiá el N° de operación</li>
+            <li>Abre la app de {config?.label}</li>
+            <li>Escanea el QR de arriba</li>
+            <li>Ingresa el monto: S/ {amount.toFixed(2)}</li>
+            <li>Copia el N° de operación</li>
           </ol>
           <div>
             <Label htmlFor="operation-number">N° de operación</Label>

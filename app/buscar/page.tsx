@@ -25,7 +25,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
             <span className="ml-1 rounded bg-muted px-2 py-0.5 font-mono">&ldquo;{q}&rdquo;</span>
           </>
         ) : (
-          "Ingresá un término de búsqueda."
+          "Ingresa un término de búsqueda."
         )}
       </p>
 
@@ -33,7 +33,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
         <div className="mt-12 rounded-xl border bg-muted p-12 text-center">
           <p className="font-display text-xl font-semibold">No encontramos productos</p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Intentá con otros términos, una marca o el SKU completo.
+            Intenta con otros términos, una marca o el SKU completo.
           </p>
         </div>
       )}

@@ -49,7 +49,7 @@ export function CartSummary() {
 
       {remainingForFreeShipping > 0 && shipping > 0 && (
         <p className="mt-3 rounded-md bg-amber-50 p-3 text-xs text-amber-800">
-          Agregá <span className="font-semibold">{formatPrice(remainingForFreeShipping)}</span> más
+          Agrega <span className="font-semibold">{formatPrice(remainingForFreeShipping)}</span> más
           para obtener envío <span className="font-semibold">gratis</span>.
         </p>
       )}

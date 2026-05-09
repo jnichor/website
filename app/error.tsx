@@ -22,7 +22,7 @@ export default function Error({
       <div>
         <h1 className="font-display text-3xl font-bold">Algo salió mal</h1>
         <p className="mt-2 text-muted-foreground">
-          Ocurrió un error inesperado. Intentá de nuevo o volvé al inicio.
+          Ocurrió un error inesperado. Intenta de nuevo o vuelve al inicio.
         </p>
       </div>
       <div className="flex gap-3">

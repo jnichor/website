@@ -35,7 +35,7 @@ export function CookieBanner() {
           <h2 className="font-display text-base font-semibold">Tu privacidad importa</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Usamos cookies para mejorar tu experiencia, analizar el tráfico y personalizar
-            contenido. Podés elegir cómo se usan tus datos. Más info en nuestra{" "}
+            contenido. Puedes elegir cómo se usan tus datos. Más info en nuestra{" "}
             <Link href="/privacidad" className="underline hover:text-primary">
               Política de Privacidad
             </Link>

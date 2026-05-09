@@ -3,6 +3,7 @@ import { Cpu } from "lucide-react";
 import { SearchInput } from "./SearchInput";
 import { CartIcon } from "./CartIcon";
 import { MobileNav } from "./MobileNav";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 const NAV = [
   { href: "/", label: "Inicio" },
@@ -16,7 +17,7 @@ const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "NovaTech Hardware";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="container mx-auto flex h-16 items-center gap-4 px-4">
         <MobileNav />
 
@@ -47,6 +48,7 @@ export function Header() {
           <SearchInput />
         </div>
 
+        <ThemeToggle />
         <CartIcon />
       </div>
     </header>

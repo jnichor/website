@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { Check, X } from "lucide-react";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 
 const ROWS = [
   "Garantía oficial del fabricante",
@@ -11,58 +11,97 @@ const ROWS = [
 
 export function WhyUs() {
   return (
-    <section className="container mx-auto px-4 py-20">
-      <div className="grid items-center gap-12 lg:grid-cols-2">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="aspect-square overflow-hidden rounded-xl bg-muted">
-            <Image
-              src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=600&q=80"
-              alt="Técnico armando una PC"
-              width={600}
-              height={600}
-              className="h-full w-full object-cover"
-            />
-          </div>
-          <div className="aspect-square translate-y-8 overflow-hidden rounded-xl bg-muted">
-            <Image
-              src="https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=600&q=80"
-              alt="Empaque de envío seguro"
-              width={600}
-              height={600}
-              className="h-full w-full object-cover"
-            />
-          </div>
-        </div>
+    <section className="relative overflow-hidden bg-[#0a0f1c] py-20 text-white md:py-28">
+      <div
+        aria-hidden
+        className="absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+        }}
+      />
 
-        <div>
-          <h2 className="font-display text-3xl font-bold md:text-4xl">
-            ¿Por qué comprar en una <span className="text-primary">tienda oficial</span>?
-          </h2>
-          <p className="mt-3 text-muted-foreground">
-            La diferencia entre lo correcto y lo barato cuando algo falla.
-          </p>
+      <div className="container relative mx-auto px-4">
+        <RevealOnScroll>
+          <div className="mx-auto mb-14 max-w-2xl text-center">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-accent">
+              La diferencia
+            </p>
+            <h2 className="font-display text-4xl font-bold leading-tight md:text-5xl">
+              Tienda oficial{" "}
+              <span className="text-white/40">vs. tienda informal</span>
+            </h2>
+            <p className="mt-4 text-base text-white/60">
+              La diferencia entre lo correcto y lo barato cuando algo falla.
+            </p>
+          </div>
+        </RevealOnScroll>
 
-          <div className="mt-8 overflow-hidden rounded-xl border">
-            <div className="grid grid-cols-3 bg-muted text-sm font-semibold">
-              <div className="p-3">Beneficio</div>
-              <div className="p-3 text-center text-primary">Tienda oficial</div>
-              <div className="p-3 text-center text-muted-foreground">Tiendas informales</div>
-            </div>
-            {ROWS.map((row, i) => (
-              <div
-                key={row}
-                className={`grid grid-cols-3 items-center text-sm ${i % 2 === 0 ? "bg-background" : "bg-muted/40"}`}
-              >
-                <div className="p-3">{row}</div>
-                <div className="flex justify-center p-3">
-                  <Check className="h-5 w-5 text-green-500" aria-label="Sí" />
-                </div>
-                <div className="flex justify-center p-3">
-                  <X className="h-5 w-5 text-destructive" aria-label="No" />
+        <div className="grid gap-6 lg:grid-cols-2">
+          <RevealOnScroll>
+            <div className="relative h-full overflow-hidden rounded-2xl border-2 border-accent/40 bg-gradient-to-br from-accent/15 via-[#0a1424] to-[#0a1424] p-8 shadow-[0_0_60px_rgba(0,168,212,0.15)]">
+              <div className="mb-6 flex items-center gap-3">
+                <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent text-accent-foreground">
+                  <Check className="h-6 w-6" aria-hidden />
+                </span>
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.22em] text-accent">
+                    Recomendado
+                  </p>
+                  <h3 className="font-display text-2xl font-bold text-white">
+                    Tienda oficial
+                  </h3>
                 </div>
               </div>
-            ))}
-          </div>
+              <ul className="space-y-3">
+                {ROWS.map((row) => (
+                  <li
+                    key={row}
+                    className="flex items-start gap-3 text-sm text-white/90"
+                  >
+                    <Check
+                      className="mt-0.5 h-5 w-5 shrink-0 text-accent"
+                      aria-hidden
+                    />
+                    <span>{row}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </RevealOnScroll>
+
+          <RevealOnScroll delayMs={120}>
+            <div className="relative h-full overflow-hidden rounded-2xl border border-white/10 bg-[#0a1424]/40 p-8">
+              <div className="mb-6 flex items-center gap-3">
+                <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/5 text-white/30">
+                  <X className="h-6 w-6" aria-hidden />
+                </span>
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/30">
+                    Riesgo
+                  </p>
+                  <h3 className="font-display text-2xl font-bold text-white/40">
+                    Tienda informal
+                  </h3>
+                </div>
+              </div>
+              <ul className="space-y-3">
+                {ROWS.map((row) => (
+                  <li
+                    key={row}
+                    className="flex items-start gap-3 text-sm text-white/40"
+                  >
+                    <X
+                      className="mt-0.5 h-5 w-5 shrink-0 text-destructive/70"
+                      aria-hidden
+                    />
+                    <span>{row}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </RevealOnScroll>
         </div>
       </div>
     </section>

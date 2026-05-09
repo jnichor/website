@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsx *)",
+      "Bash(echo \"Components fetch dispatched in background, PID $!\")",
+      "Bash(npm run *)"
+    ]
+  }
+}

@@ -24,7 +24,7 @@ export default function TermsPage() {
       <section>
         <h2 className="font-display text-xl font-semibold">2. Aceptación de los términos</h2>
         <p className="mt-2">
-          Al usar este sitio o realizar una compra aceptás estos Términos y la Política de
+          Al usar este sitio o realizar una compra aceptas estos Términos y la Política de
           Privacidad. Si no estás de acuerdo, no utilices el sitio.
         </p>
       </section>
@@ -50,7 +50,7 @@ export default function TermsPage() {
       <section>
         <h2 className="font-display text-xl font-semibold">5. Cambios y devoluciones</h2>
         <p className="mt-2">
-          Conforme a la Ley de Protección al Consumidor (Ley 29571), tenés derecho a desistir de la
+          Conforme a la Ley de Protección al Consumidor (Ley 29571), tienes derecho a desistir de la
           compra dentro de los 7 días calendario siguientes a la recepción del producto. El
           producto debe estar sin uso, en su empaque original y con todos los accesorios.
         </p>

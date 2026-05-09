@@ -37,7 +37,7 @@ export default function WarrantyPage() {
         <div className="container mx-auto px-4">
           <h1 className="font-display text-4xl font-bold md:text-5xl">Garantía y soporte</h1>
           <p className="mt-3 max-w-2xl text-primary-foreground/80">
-            Tu tranquilidad es parte del producto. Acá te contamos cómo te respaldamos.
+            Tu tranquilidad es parte del producto. Aquí te contamos cómo te respaldamos.
           </p>
         </div>
       </section>
@@ -63,9 +63,9 @@ export default function WarrantyPage() {
         <div className="container mx-auto max-w-3xl space-y-6 px-4 text-sm leading-relaxed">
           <h2 className="font-display text-2xl font-bold">Cómo activar la garantía</h2>
           <ol className="list-decimal space-y-2 pl-5">
-            <li>Conservá tu boleta o factura electrónica (nunca caduca).</li>
+            <li>Conserva tu boleta o factura electrónica (nunca caduca).</li>
             <li>
-              Escribinos por WhatsApp o email con número de pedido y descripción del problema.
+              Escríbenos por WhatsApp o email con número de pedido y descripción del problema.
             </li>
             <li>Te enviamos guía de retorno gratis dentro de Lima Metropolitana.</li>
             <li>Diagnóstico en 24-72h hábiles. Reparación, cambio o reembolso según el caso.</li>

@@ -28,7 +28,7 @@ export default function CartPage() {
         <div>
           <h1 className="font-display text-3xl font-bold">Tu carrito está vacío</h1>
           <p className="mt-2 text-muted-foreground">
-            Explorá nuestros productos y armá tu setup ideal.
+            Explora nuestros productos y arma tu setup ideal.
           </p>
         </div>
         <Button asChild variant="accent" size="lg">

@@ -1,0 +1,237 @@
+Launching headless Chromium...
+[B09VCJ171S] fetching... ok (8 imgs)
+[B0DKFMSMYK] fetching... ok (3 imgs)
+[B0CGJDKLB8] fetching... ok (4 imgs)
+[B0DFKC99VL] fetching... ok (5 imgs)
+[B0DPLQWLBD] fetching... ok (22 imgs)
+[B089D1YG11] fetching... ok (7 imgs)
+[B09GP7P1XS] fetching... ok (7 imgs)
+[B09K4QMPL9] fetching... ok (13 imgs)
+[B08LGKGBKT] fetching... ok (7 imgs)
+[
+  {
+    "asin": "B09VCJ171S",
+    "title": "AMD Ryzen 5 5500 6-Core, 12-Thread Unlocked Desktop Processor with Wraith Stealth Cooler",
+    "brand": null,
+    "priceUSD": null,
+    "images": [
+      "https://m.media-amazon.com/images/I/51So7GoGvxL._AC_SL1384_.jpg",
+      "https://m.media-amazon.com/images/I/51k++KwUPXL._AC_SL1395_.jpg",
+      "https://m.media-amazon.com/images/I/81Y7WoyvFjL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81-ohhrrgwL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61xtcgV098L._AC_SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/515fiUhBVeL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81N7iHCxTML._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81lyks0XCcL._AC_SL1500_.jpg"
+    ],
+    "bullets": [
+      "Can deliver fast 100 plus FPS performance in the world's most popular games, discrete graphics card required",
+      "6 Cores and 12 processing threads, bundled with the AMD Wraith Stealth cooler",
+      "4.2 GHz Max Boost, unlocked for overclocking, 19 MB cache, DDR4-3200 support",
+      "For the advanced Socket AM4 platform"
+    ],
+    "status": "ok"
+  },
+  {
+    "asin": "B0DKFMSMYK",
+    "title": "AMD RYZEN 7 9800X3D 8-Core, 16-Thread Desktop Processor",
+    "brand": null,
+    "priceUSD": null,
+    "images": [
+      "https://m.media-amazon.com/images/I/71NMFO0iUhL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/5195hGcJ0IL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71KDfkysoeL._AC_SL1500_.jpg"
+    ],
+    "bullets": [
+      "The world’s fastest gaming processor, built on AMD ‘Zen5’ technology and Next Gen 3D V-Cache.",
+      "8 cores and 16 threads, delivering +~16% IPC uplift and great power efficiency",
+      "96MB L3 cache with better thermal performance vs. previous gen and allowing higher clock speeds, up to 5.2GHz",
+      "Drop-in ready for proven Socket AM5 infrastructure",
+      "Cooler not included"
+    ],
+    "status": "ok"
+  },
+  {
+    "asin": "B0CGJDKLB8",
+    "title": "Intel® Core™ i9-14900K Desktop Processor",
+    "brand": null,
+    "priceUSD": null,
+    "images": [
+      "https://m.media-amazon.com/images/I/619ytLAytAL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61f8hqeg-dL._AC_SL1080_.jpg",
+      "https://m.media-amazon.com/images/I/61x6XuKeEGL._AC_SL1080_.jpg",
+      "https://m.media-amazon.com/images/I/61ujd7RN-3L._AC_SL1500_.jpg"
+    ],
+    "bullets": [
+      "Game without compromise. Play harder and work smarter with Intel Core 14th Gen processors",
+      "24 cores (8 P-cores plus 16 E-cores) and 32 threads. Integrated Intel UHD Graphics 770 included",
+      "Leading max clock speed of up to 6.0 GHz gives you smoother game play, higher frame rates, and rapid responsiveness",
+      "Compatible with Intel 600-series (with potential BIOS update) or 700-series chipset-based motherboards",
+      "DDR4 and DDR5 platform support cuts your load times and gives you the space to run the most demanding games"
+    ],
+    "status": "ok"
+  },
+  {
+    "asin": "B0DFKC99VL",
+    "title": "Intel Core Ultra 9 Desktop Processor 285K - 24 cores (8 P-cores + 16 E-cores) and 24 threads - Up to 5.7 GHz unlocked - 40 MB Cache - Compatible with Intel 800 series chipset-based motherboards - Inte",
+    "brand": null,
+    "priceUSD": null,
+    "images": [
+      "https://m.media-amazon.com/images/I/51xxm7JkJ6L._AC_SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/61VD0NJ26QL._AC_SL1080_.jpg",
+      "https://m.media-amazon.com/images/I/71cmGx3gZtL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/518vil08pDL._AC_SL1080_.jpg",
+      "https://m.media-amazon.com/images/I/61+sHdtKbSL._AC_SL1080_.jpg"
+    ],
+    "bullets": [
+      "Get ultra-efficient with Intel Core Ultra desktop processors that improve both performance and efficiency so your PC can run cooler, quieter, and quicker.",
+      "Core and Threads 24 cores (8 P-cores plus 16 E-cores) and 24 threads. Integrated Intel Graphics included",
+      "Performance Hybrid Architecture Integrates two core microarchitectures, prioritizing and distributing workloads to optimize performance",
+      "Performance Unlocked Up to 5.7 GHz unlocked. 40MB Cache",
+      "Compatibility Compatible with Intel 800 series chipset-based motherboards",
+      "PCIe Express Version Turbo Boost Max Technology 3.0, and PCIe 5.0 and 4.0 support. Intel Optane Memory support. No thermal solution included"
+    ],
+    "status": "ok"
+  },
+  {
+    "asin": "B0DPLQWLBD",
+    "title": "ASUS ROG Strix B850-F Gaming WiFi AMD AM5 B850-F ATX Motherboard 16+2+2 Power Stages, AI PC, DDR5 AEMP, WiFi 7, 4X M.2, PCIe® 5.0, Total Support of 19 USB, 20Gbps Type-C®, AI Networking II, Aura Sync",
+    "brand": null,
+    "priceUSD": null,
+    "images": [
+      "https://m.media-amazon.com/images/I/81tBiDJ-eSL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81xKGku371L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81XjCyie5+L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71iFkfDccuL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81xqNyUqpuL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81-BwvCk+9L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81GNHG70g0L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81rPpcfAJjL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/718JOSZnQaL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/711+PM8S92L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/91ivknKTZsL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71nm8Tyi-5L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/911BemxaJ5L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81KygwQorxL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/91Vp4yuenVL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/814GhiHWLjL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/91L6Ea5bVKL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81uMgWpHGHL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81+7XzQBRHL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81rydJMfVxL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81eaeiyMX+L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81ZJGsaELhL._AC_SL1500_.jpg"
+    ],
+    "bullets": [
+      "Ready for Advanced AI PC: Designed for the future of AI computing, with the power and connectivity needed for demanding AI applications",
+      "AMD AM5 Socket: Ready for AMD Ryzen 9000, 8000 and 7000 Series Desktop Processors",
+      "Intelligent Control: ASUS-exclusive AI Advisor, AI Networking II and AEMP to simplify setup and improve performance",
+      "Robust Power Solution: 16+2+2 power solution rated for 80A per stage with dual ProCool power connectors, high-quality alloy chokes and durable capacitors to support multi-core processors",
+      "Optimized Thermal Design: Massive heatsinks with integrated I/O cover, and high-conductivity thermal pad"
+    ],
+    "status": "ok"
+  },
+  {
+    "asin": "B089D1YG11",
+    "title": "MSI B550M PRO-VDH WiFi ProSeries Motherboard (AMD Ryzen 5000, AM4, DDR4, PCIe 4.0, SATA 6Gb/s, M.2, USB 3.2 Gen 1, Wi-Fi, Bluetooth, D-SUB/HDMI/DP, Micro-ATX)",
+    "brand": null,
+    "priceUSD": null,
+    "images": [
+      "https://m.media-amazon.com/images/I/61HOwOmsAiL._AC_SL1150_.jpg",
+      "https://m.media-amazon.com/images/I/617iDu8l8VL._AC_SL1024_.jpg",
+      "https://m.media-amazon.com/images/I/61OwKOr0GyL._AC_SL1024_.jpg",
+      "https://m.media-amazon.com/images/I/616IVaJSpJL._AC_SL1024_.jpg",
+      "https://m.media-amazon.com/images/I/51enasOMsIL._AC_SL1116_.jpg",
+      "https://m.media-amazon.com/images/I/71Mumt38AtL._AC_SL1280_.jpg",
+      "https://m.media-amazon.com/images/I/91UMFdeYvVL._AC_SL1500_.jpg"
+    ],
+    "bullets": [
+      "Support for 3rd Gen AMD Ryzen processors and future AMD Ryzen processors with BIOS update.Audio ports (Rear): Realtek ALC892/ALC897 Codec",
+      "Supports dual channel DDR4 memory up to 128 GB (4400 MHz)",
+      "Lightning Fast Game experience: PCIe 4.0, Lightning Gen 4 M.2 with M.2 Shield Frozr, AMD Turbo USB 3.2 GEN 2",
+      "Core Boost technology combines optimized power circuit layouts and digital power regulation which allows for precise and steady current delivery to the CPU",
+      "AUDIO BOOST rewards your ears with studio grade sound quality for immersive gaming experiences",
+      "Premium Thermal Solution: Heatsink thermal pad rated for 7W/mk and PCB with 2oz thickened copper",
+      "Flash BIOS Button lets users flash the BIOS even without a CPU or memory"
+    ],
+    "status": "ok"
+  },
+  {
+    "asin": "B09GP7P1XS",
+    "title": "Asus ROG Strix B550-F Gaming WiFi II AMD AM4 (3rd Gen Ryzen) ATX Gaming Motherboard (PCIe 4.0,WiFi 6E, 2.5Gb LAN, BIOS Flashback, HDMI 2.1, Addressable Gen 2 RGB Header and Aura Sync)",
+    "brand": null,
+    "priceUSD": null,
+    "images": [
+      "https://m.media-amazon.com/images/I/81S9D7bqEzL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81WbvasurPL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81Pnt9GkS2L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81c-oxS8+VL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81k8LENCYEL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/815Uaaf6U9L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81Wv4R9LRNL._AC_SL1500_.jpg"
+    ],
+    "bullets": [
+      "AM4 socket: Ready for AMD Ryzen 3000 and 5000 series, plus 5000 and 4000 G-series desktop processors.Bluetooth v5.2",
+      "Best gaming connectivity: PCIe 4.0-ready, dual M.2 slots, USB 3.2 Gen 2 Type-C, plus HDMI 2.1 and DisplayPort 1.2 output",
+      "Smooth networking: On-board WiFi 6E (802.11ax) and Intel 2.5 Gb Ethernet with ASUS LANGuard",
+      "Robust power solution: 12+2 teamed power stages with ProCool power connector, high-quality alloy chokes and durable capacitors",
+      "Renowned software: Bundled 60 days AIDA64 Extreme subscription and intuitive UEFI BIOS dashboard"
+    ],
+    "status": "ok"
+  },
+  {
+    "asin": "B09K4QMPL9",
+    "title": "ASUS TUF Gaming B550-PLUS WiFi II AMD AM4 (3rd Gen Ryzen™) ATX Gaming Motherboard (PCIe 4.0, WiFi 6, 2.5Gb LAN, BIOS Flashback, USB 3.2 Gen 2, Addressable Gen 2 RGB Header and Aura Sync)",
+    "brand": null,
+    "priceUSD": null,
+    "images": [
+      "https://m.media-amazon.com/images/I/81Wv4R9LRNL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81YQ4O9m1TL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81lTqmuAi6L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81UpK8Cvq4L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/91iNAhjhnpL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/91cCde+sH1L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81jzBDB9r7L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81TOtmzDSFL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81+oFqfvqeL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81jKYFd-COL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71dJuNlCB5L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81dZv0tSdfL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81S9D7bqEzL._AC_SL1500_.jpg"
+    ],
+    "bullets": [
+      "AMD AM4 Socket and PCIe 4.0: The perfect pairing for 3rd Gen AMD Ryzen CPUs.Bluetooth v5.2",
+      "Robust Power Design: 8+2 DrMOS power stages with high-quality alloy chokes and durable capacitors to provide reliable power for the last AMD high-count-core CPUs",
+      "Optimized Thermal Solution: Fanless VRM and PCH heatsink, multiple hybrid fan headers and fan speed management with Fan Xpert 4 or the UEFI Q-Fan Control utility",
+      "High-performance Gaming Networking: WiFi 6 (802.11ax), 2.5 Gb LAN with ASUS LANGuard",
+      "Best Gaming Connectivity: Supports HDMI 2.1 (4K@60HZ) and DisplayPort 1.2 output, featuring dual M.2 slots (NVMe SSD)—one with PCIe 4.0 x4 connectivity, front panel USB 3.2 Gen 1 connector, USB 3.2 Gen 2 Type-C & Type-A ports and Thunderbolt 3 header, 1 x SPI TPM header"
+    ],
+    "status": "ok"
+  },
+  {
+    "asin": "B08LGKGBKT",
+    "title": "GIGABYTE B550 Gaming X V2 AMD AM4 ATX Motherboard, Supports Ryzen 5000/4000/3000 Series Processors, DDR4, 10+3 Power Phase, 2X M.2, PCIe 4.0, Front USB-C, GbE LAN, Q-Flash Plus, RGB Fusion",
+    "brand": null,
+    "priceUSD": null,
+    "images": [
+      "https://m.media-amazon.com/images/I/81A2DlnZuBL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/6111DwAtKIL._AC_SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/61uCyTykVRL._AC_SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/715rTStv82L._AC_SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/513OU+Wr1JL._AC_SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/81HyYYlfU6L._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81EO3LwxpIL._AC_SL1500_.jpg"
+    ],
+    "bullets": [
+      "AMD Socket AM4: Ready to support AMD Ryzen 5000/4000/3000 Series Processors.",
+      "Enhanced Power Solution: Digital Twin 10+3 Power Phase and premium chokes and capacitors for steady power delivery.",
+      "Advanced Thermal Armor: Advanced VRM heatsink for better heat dissipation. Integrated I/O Shield for quicker PC DIY assembly.",
+      "Boost Your Memory: Compatible with DDR4 Memory and supports 4 DIMMs with Extreme Memory Profile support.",
+      "Comprehensive Connectivity: 1x Ultra Durable PCIe 4.0 x16, 1x PCIe 4.0 M.2 slot, 1x PCIe 3.0 M.2 slot, 3x USB 3.2 Gen 2 Type-A, 1x USB 3.2 Gen 1 Type-A, and 1x Front USB 3.2 Gen 1 Type-C for hassle free setup.",
+      "Smooth Online Experience: GbE LAN ensures the most stable transmission environment and Bluetooth 5.3.",
+      "DIY Friendly Design: Smooth building experience with suite of easy building features, such as Q-Flash Plus for effortless BIOS upgrades without installing your CPU, RAM, or GPU.",
+      "Friendly UI: Refreshed BIOS with Easy Mode interface for intuitive and modular control."
+    ],
+    "status": "ok"
+  }
+]
