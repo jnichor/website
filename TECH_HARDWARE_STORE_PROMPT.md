@@ -15,8 +15,10 @@ The result must be a single Next.js app the user can run with `npm install && np
 ## 1. BRIEF — fill these in before running the prompt
 
 > **HARD REQUIREMENTS (no se pueden sobrescribir):**
-> - **Idioma de TODA la interfaz, copys, metadatos, mensajes de error, emails y formularios: ESPAÑOL (es-PE).** No se admite mezcla con inglés en texto visible (los identificadores de código siguen en inglés).
+> - **Idioma de TODA la interfaz, copys, metadatos, mensajes de error, emails y formularios: ESPAÑOL PERUANO NEUTRO (es-PE) con formas TÚ.** No se admite mezcla con inglés en texto visible (los identificadores de código siguen en inglés). **NO usar voseo argentino** (vos / mirá / pedinos / acá / tenés / podés / fierros). Ver Sección 11 para la tabla completa de sustituciones.
 > - **Medios de pago obligatorios:** **Yape**, **Plin**, **Tarjeta de crédito Visa**, **Tarjeta de crédito Mastercard**, **Tarjeta de débito Visa**, **Tarjeta de débito Mastercard**. Estos cuatro tipos de tarjeta se exponen como opciones explícitas (no agrupadas como un único "tarjeta").
+> - **Estética visual:** la home debe tener **estética MSI dark cinematic** (inspirada en páginas de producto de MSI Katana 15, Cyborg 15). NO usar el split layout corporativo "imagen a la derecha / texto a la izquierda" tradicional. Ver Sección 5.
+> - **Imágenes de producto:** REALES, no Unsplash genérico. Ver Sección 4.5 (pipeline con Puppeteer + Stealth para Amazon, ASUS CDN abierto, normalización a JPEG real).
 
 ```
 Company name:           <<e.g., "NovaTech Hardware">>
@@ -146,24 +148,588 @@ interface Product {
 }
 ```
 
-Seed `lib/products.ts` with **at least 16 realistic products** distributed across categories. Use representative brands (ASUS, MSI, Gigabyte, Logitech, Razer, Corsair, Kingston, Samsung, WD, NVIDIA, AMD, Intel, LG, TP-Link, etc.) and realistic prices in the BRIEF's currency. Use `images.unsplash.com` URLs for product photos (configure `next.config.ts` `images.remotePatterns` for `unsplash.com` and `pexels.com`).
+Seed `lib/products.ts` with **at least 50 realistic products** distributed across categories. Use representative brands (ASUS, MSI, Gigabyte, Lenovo, HP, Acer, Razer, Logitech, Corsair, Kingston, Crucial, Samsung, WD, Seagate, NVIDIA, AMD, Intel, Sony, JBL, Apple, Dell, TP-Link, etc.) and realistic prices in the BRIEF's currency.
+
+> **Product photos must be real**, sourced from manufacturer CDNs or Amazon (see Section 4.5 — Image pipeline). Generic Unsplash stock photos are NOT acceptable for production: they don't match specific product names. The original prompt's instruction to "use Unsplash URLs" is replaced by the autonomous image pipeline.
+
+---
+
+## 4.5 Product image pipeline (real images, not stock)
+
+Real product photos come from manufacturer CDNs or Amazon listings. Build an autonomous pipeline so the catalog has zero dependency on Unsplash placeholders.
+
+### Sources by reliability
+
+| Source | Behavior | Use when |
+|---|---|---|
+| **ASUS CDN** (`dlcdnwebimgs.asus.com/gain/<UUID>/w1000/h732`) | Open, no anti-bot | ANY ASUS product (laptops, motherboards, monitors, routers, peripherals) |
+| **Amazon `m.media-amazon.com`** | Hi-res via Amazon scraping | Brands that block their own CDN (MSI, Lenovo, Apple, Razer, Dell, HP, Acer, Gigabyte) |
+| **vectorlogo.zone / Simple Icons** | Logos only | BrandStrip section (not products) |
+| **Manufacturer pages directly** | Often 403 / timeout for bots | Last resort, only for ASUS-class open CDNs |
+
+### Tools (install as devDependencies)
+
+```bash
+npm install --save-dev puppeteer-extra puppeteer-extra-plugin-stealth puppeteer
+# sharp is already a transitive dep via Next.js 15+ (used internally for image optimization)
+```
+
+### Scripts to build
+
+#### `scripts/fetch-amazon-puppeteer.ts`
+
+Headless Chromium with stealth plugin to bypass Amazon's anti-bot detection. Bare `fetch()` from Node returns CAPTCHA pages — only Puppeteer + stealth gets through. **Full implementation** (copy verbatim):
+
+```ts
+/**
+ * Run: npx tsx scripts/fetch-amazon-puppeteer.ts <ASIN> [<ASIN> ...]
+ */
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
+import type { Browser } from "puppeteer";
+
+puppeteer.use(StealthPlugin());
+
+interface ProductData {
+  asin: string;
+  title: string | null;
+  brand: string | null;
+  priceUSD: number | null;
+  images: string[];
+  bullets: string[];
+  status: "ok" | "blocked" | "error";
+  note?: string;
+}
+
+async function fetchProduct(browser: Browser, asin: string): Promise<ProductData> {
+  const page = await browser.newPage();
+  await page.setUserAgent(
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+  );
+  await page.setViewport({ width: 1920, height: 1080 });
+  await page.setExtraHTTPHeaders({ "Accept-Language": "en-US,en;q=0.9" });
+
+  try {
+    await page.goto(`https://www.amazon.com/dp/${asin}`, {
+      waitUntil: "domcontentloaded",
+      timeout: 45000,
+    });
+
+    const isCaptcha = await page.evaluate(() =>
+      document.body.innerText.includes("we just need to make sure you're not a robot")
+    );
+    if (isCaptcha) {
+      return { asin, title: null, brand: null, priceUSD: null, images: [], bullets: [], status: "blocked", note: "CAPTCHA" };
+    }
+
+    await page.waitForSelector("#productTitle", { timeout: 15000 }).catch(() => {});
+
+    const data = await page.evaluate(() => {
+      const titleEl = document.querySelector("#productTitle");
+      const title = titleEl?.textContent?.trim() ?? null;
+
+      const brandEl = document.querySelector("#bylineInfo");
+      let brand: string | null = null;
+      if (brandEl) {
+        const text = brandEl.textContent?.trim() ?? "";
+        const m = text.match(/^(?:Visit the |Marca:\s*|Brand:\s*)?(.+?)(?:\s+Store)?$/i);
+        brand = m ? m[1].trim() : text;
+      }
+
+      let priceUSD: number | null = null;
+      const priceEl = document.querySelector(
+        ".a-price.aok-align-center .a-offscreen, #corePrice_feature_div .a-offscreen, .a-price .a-offscreen"
+      );
+      if (priceEl) {
+        const m = priceEl.textContent?.match(/\$([\d,]+\.\d{2})/);
+        if (m) priceUSD = parseFloat(m[1].replace(/,/g, ""));
+      }
+
+      const images = new Set<string>();
+      const mainImg = document.querySelector("#landingImage") as HTMLImageElement | null;
+      if (mainImg) {
+        const hires = mainImg.getAttribute("data-old-hires") || mainImg.src;
+        if (hires && hires.startsWith("http")) images.add(hires);
+      }
+      // Pull every "hiRes":"<url>" from the colorImages JS blob via regex
+      for (const s of document.querySelectorAll("script")) {
+        const text = s.textContent || "";
+        const re = /"hiRes":"(https:\/\/[^"]+\.(?:jpg|png|webp))"/g;
+        let m: RegExpExecArray | null;
+        while ((m = re.exec(text)) !== null) {
+          if (m[1].includes("m.media-amazon.com")) images.add(m[1]);
+        }
+      }
+
+      const bulletEls = document.querySelectorAll("#feature-bullets ul li span.a-list-item");
+      const bullets = Array.from(bulletEls)
+        .map((el) => (el.textContent ?? "").trim())
+        .filter((t) => t.length > 0 && t.length < 500);
+
+      return { title, brand, priceUSD, images: Array.from(images), bullets };
+    });
+
+    return { asin, ...data, status: "ok" };
+  } catch (err) {
+    return { asin, title: null, brand: null, priceUSD: null, images: [], bullets: [], status: "error", note: err instanceof Error ? err.message : String(err) };
+  } finally {
+    await page.close();
+  }
+}
+
+async function main() {
+  const asins = process.argv.slice(2);
+  if (asins.length === 0) {
+    console.error("Usage: npx tsx scripts/fetch-amazon-puppeteer.ts <ASIN> [<ASIN> ...]");
+    process.exit(1);
+  }
+
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-blink-features=AutomationControlled"],
+  });
+
+  const results: ProductData[] = [];
+  for (const asin of asins) {
+    process.stderr.write(`[${asin}] fetching... `);
+    const d = await fetchProduct(browser, asin);
+    process.stderr.write(`${d.status} (${d.images.length} imgs)\n`);
+    results.push(d);
+    await new Promise((r) => setTimeout(r, 2000 + Math.random() * 1500)); // polite jitter
+  }
+
+  await browser.close();
+  console.log(JSON.stringify(results, null, 2));
+}
+
+main().catch((err) => { console.error(err); process.exit(1); });
+```
+
+**Filtrado de imágenes que devuelve este script** — al copiarlas a `product-images.json`, prefiere las que tienen prefijo `71*`, `81*`, `61*` (suelen ser fotos del producto) y descarta las que empiezan con `41*` o `51*` (variantes / thumbnails). Acepta solo URLs con `_AC_SL1000_` o superior. Si una imagen es marketing infographic ("Blazing Speed", overlays de specs), descártala visualmente después de descargar.
+
+#### `scripts/product-images.json`
+
+Map each product ID to source URLs:
+
+```json
+{
+  "p001": {
+    "_name": "ASUS ROG Strix G16 RTX 4070",
+    "sourceUrls": [
+      "https://dlcdnwebimgs.asus.com/gain/CFE9CB59-216D-4AC9-AEAE-10054506055C/w1000/h732",
+      "https://dlcdnwebimgs.asus.com/gain/2EC328E4-7529-4CB5-A797-3B13E84D4664/w1000/h732"
+    ]
+  },
+  "p043": {
+    "_name": "Razer Blade 14 — 4 infographic URLs filtered out",
+    "sourceUrls": [
+      "https://m.media-amazon.com/images/I/71wk6LgSmoL._SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81yLVBQfkTL._SL1500_.jpg"
+    ]
+  }
+}
+```
+
+#### `scripts/download-product-images.ts`
+
+Lee `product-images.json` y descarga cada URL a `public/products/<id>/N.jpg`. Idempotente (skipea archivos existentes). Sin dependencias externas — usa `fetch` nativo de Node. **Full implementation**:
+
+```ts
+/**
+ * Reads scripts/product-images.json with shape:
+ *   { "p001": { "sourceUrls": ["https://...jpg", "https://...jpg"] }, ... }
+ * Saves to public/products/<id>/0.<ext>, 1.<ext>, ...
+ *
+ * Usage:  npm run images:download
+ */
+import { writeFile, mkdir, access, readFile } from "node:fs/promises";
+import { resolve, extname } from "node:path";
+
+interface ProductConfig { sourceUrls: string[]; }
+type Config = Record<string, ProductConfig>;
+
+const ROOT = resolve(process.cwd());
+const CONFIG_PATH = resolve(ROOT, "scripts", "product-images.json");
+const PUBLIC_DIR = resolve(ROOT, "public", "products");
+const USER_AGENT =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+
+async function fileExists(path: string): Promise<boolean> {
+  try { await access(path); return true; } catch { return false; }
+}
+
+function extFromUrl(url: string): string {
+  const clean = url.split("?")[0].split("#")[0];
+  const ext = extname(clean).toLowerCase();
+  if (ext && [".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif"].includes(ext)) return ext;
+  return ".jpg";
+}
+
+async function downloadOne(url: string, dest: string): Promise<"saved" | "skipped" | "failed"> {
+  if (await fileExists(dest)) return "skipped";
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "User-Agent": USER_AGENT,
+        Accept: "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9,es;q=0.8",
+      },
+      redirect: "follow",
+    });
+    if (!res.ok) { console.error(`  ✗ ${url} → HTTP ${res.status}`); return "failed"; }
+    const buf = Buffer.from(await res.arrayBuffer());
+    if (buf.byteLength < 1024) { console.error(`  ✗ ${url} → suspiciously small (${buf.byteLength} bytes)`); return "failed"; }
+    await writeFile(dest, buf);
+    return "saved";
+  } catch (err) {
+    console.error(`  ✗ ${url} → ${err instanceof Error ? err.message : String(err)}`);
+    return "failed";
+  }
+}
+
+async function main() {
+  let raw: string;
+  try { raw = await readFile(CONFIG_PATH, "utf8"); }
+  catch { console.error(`No config at ${CONFIG_PATH}`); process.exit(1); }
+
+  const config: Config = JSON.parse(raw);
+  await mkdir(PUBLIC_DIR, { recursive: true });
+
+  const totals = { saved: 0, skipped: 0, failed: 0 };
+  for (const [productId, { sourceUrls }] of Object.entries(config)) {
+    if (!sourceUrls?.length) { console.log(`[${productId}] no URLs — skipping`); continue; }
+    console.log(`[${productId}] ${sourceUrls.length} image(s)`);
+    const productDir = resolve(PUBLIC_DIR, productId);
+    await mkdir(productDir, { recursive: true });
+    for (let i = 0; i < sourceUrls.length; i++) {
+      const url = sourceUrls[i];
+      const dest = resolve(productDir, `${i}${extFromUrl(url)}`);
+      const result = await downloadOne(url, dest);
+      totals[result]++;
+      if (result === "saved") console.log(`  ✓ ${i}${extFromUrl(url)}`);
+      else if (result === "skipped") console.log(`  · ${i}${extFromUrl(url)} (already exists)`);
+    }
+  }
+  console.log(`\nDone. saved=${totals.saved}  skipped=${totals.skipped}  failed=${totals.failed}`);
+}
+
+main().catch((err) => { console.error(err); process.exit(1); });
+```
+
+Add to `package.json` scripts: `"images:download": "tsx scripts/download-product-images.ts"`
+
+#### `scripts/normalize-product-images.ts`
+
+Muchos archivos `.jpg` que descargan de CDNs de fabricantes son en realidad PNG/WEBP/HEIF/AVIF con extensión mentirosa. Los browsers toleran (MIME sniffing) pero la API de Anthropic rechaza AVIF y la optimización de Next puede fallar. Este script normaliza todo a JPEG real q90 mozjpeg, in-place, manteniendo el nombre `.jpg`. **Full implementation**:
+
+```ts
+/**
+ * Run with: npx tsx scripts/normalize-product-images.ts
+ */
+import sharp from "sharp";
+import { readdir, readFile, writeFile, stat } from "node:fs/promises";
+import { join } from "node:path";
+
+const ROOT = join(process.cwd(), "public", "products");
+
+async function main() {
+  const folders = await readdir(ROOT);
+  let converted = 0, skipped = 0, failed = 0;
+
+  for (const folder of folders) {
+    const folderPath = join(ROOT, folder);
+    const folderStat = await stat(folderPath);
+    if (!folderStat.isDirectory()) continue;
+
+    const files = await readdir(folderPath);
+    for (const file of files) {
+      if (!file.endsWith(".jpg")) continue;
+      const filePath = join(folderPath, file);
+      const rel = `${folder}/${file}`;
+
+      try {
+        const buffer = await readFile(filePath);
+        const meta = await sharp(buffer).metadata();
+        if (meta.format === "jpeg") {
+          console.log(`  ${rel}  already JPEG`);
+          skipped++; continue;
+        }
+        const out = await sharp(buffer).jpeg({ quality: 90, mozjpeg: true }).toBuffer();
+        await writeFile(filePath, out);
+        console.log(`✓ ${rel}  ${meta.format} → JPEG`);
+        converted++;
+      } catch (err) {
+        console.error(`✗ ${rel}  FAILED: ${err instanceof Error ? err.message : String(err)}`);
+        failed++;
+      }
+    }
+  }
+
+  console.log(`\nConverted: ${converted}\nSkipped (already JPEG): ${skipped}\nFailed: ${failed}`);
+  process.exit(failed > 0 ? 1 : 0);
+}
+
+main().catch((err) => { console.error(err); process.exit(1); });
+```
+
+Add to `package.json` scripts: `"images:normalize": "tsx scripts/normalize-product-images.ts"`
+
+> Nota: `sharp` ya viene como dependencia transitiva de Next.js 15+ (lo usa internamente para optimización de imágenes), no hay que instalar nada extra.
+
+#### `scripts/audit-product-images.ts`
+
+Importa `lib/products.ts` y emite una tabla agrupada por categoría con la fuente de imagen de cada producto (`local` / `unsplash` / `other`). Útil para verificar antes del deploy que TODOS los productos tienen imágenes locales. **Full implementation**:
+
+```ts
+/**
+ * Run: npx tsx scripts/audit-product-images.ts
+ */
+import { PRODUCTS } from "../lib/products";
+
+type Row = {
+  id: string;
+  name: string;
+  brand: string;
+  category: string;
+  source: "local" | "unsplash" | "other";
+  imageCount: number;
+};
+
+const rows: Row[] = PRODUCTS.map((p) => {
+  const first = p.image ?? p.images?.[0] ?? "";
+  let source: Row["source"] = "other";
+  if (first.startsWith("/products/")) source = "local";
+  else if (first.includes("unsplash.com")) source = "unsplash";
+  return {
+    id: p.id,
+    name: p.name,
+    brand: p.brand,
+    category: p.category,
+    source,
+    imageCount: p.images?.length ?? (p.image ? 1 : 0),
+  };
+});
+
+console.log(`TOTAL: ${rows.length} products`);
+console.log(`  local images: ${rows.filter((r) => r.source === "local").length}`);
+console.log(`  unsplash:     ${rows.filter((r) => r.source === "unsplash").length}`);
+console.log(`  other:        ${rows.filter((r) => r.source === "other").length}`);
+console.log("");
+
+const byCategory = new Map<string, Row[]>();
+for (const r of rows) {
+  if (!byCategory.has(r.category)) byCategory.set(r.category, []);
+  byCategory.get(r.category)!.push(r);
+}
+
+for (const [cat, list] of byCategory) {
+  console.log(`\n=== ${cat.toUpperCase()} (${list.length}) ===`);
+  for (const r of list) {
+    const tag = r.source === "local" ? "[LOCAL]" : r.source === "unsplash" ? "[UNSPL]" : "[OTHER]";
+    console.log(`  ${r.id}  ${tag}  ${r.brand} — ${r.name}`);
+  }
+}
+```
+
+> **Quality gate**: antes de deploy, este script debe reportar `unsplash: 0` y `other: 0`. Cualquier producto con source distinto a `local` indica que falta corregir su entry en `lib/products.ts`.
+
+#### `scripts/delete-products.ts`
+
+Utilidad para eliminar productos en bloque del catálogo. Recorre `lib/products.ts` línea por línea; cada producto top-level abre con `  {` (indent de 2 espacios) y cierra con `  },`. Match contra `TO_DELETE` por ID extraído del campo `id: "pXXX"`. **Full implementation**:
+
+```ts
+/**
+ * Run: npx tsx scripts/delete-products.ts
+ *
+ * Edit the TO_DELETE Set below with the IDs you want removed, then run.
+ * Mantiene comentarios de sección y el resto de productos intactos.
+ */
+import { readFile, writeFile } from "node:fs/promises";
+
+const TO_DELETE = new Set<string>([
+  // "p002", "p004", ...
+]);
+
+interface Block { start: number; end: number; id: string; }
+
+async function main() {
+  const path = "lib/products.ts";
+  const text = await readFile(path, "utf-8");
+  const lines = text.split("\n");
+
+  const blocks: Block[] = [];
+  let blockStart = -1;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (/^  \{\s*$/.test(line)) blockStart = i;
+    const idMatch = line.match(/^\s+id:\s*"(p\d+)"/);
+    if (idMatch && blockStart >= 0) {
+      let endLine = -1;
+      for (let j = i + 1; j < lines.length; j++) {
+        if (/^  \},?\s*$/.test(lines[j])) { endLine = j; break; }
+      }
+      if (endLine === -1) throw new Error(`Could not find end of block starting at line ${blockStart}`);
+      blocks.push({ start: blockStart, end: endLine, id: idMatch[1] });
+      blockStart = -1;
+    }
+  }
+
+  const toRemoveLines = new Set<number>();
+  const removedIds: string[] = [];
+  const keptIds: string[] = [];
+  for (const block of blocks) {
+    if (TO_DELETE.has(block.id)) {
+      for (let i = block.start; i <= block.end; i++) toRemoveLines.add(i);
+      removedIds.push(block.id);
+    } else {
+      keptIds.push(block.id);
+    }
+  }
+
+  const newLines = lines.filter((_, i) => !toRemoveLines.has(i));
+  const newText = newLines.join("\n").replace(/\n{3,}/g, "\n\n"); // collapse triple blank lines
+  await writeFile(path, newText);
+
+  console.log(`Removed ${removedIds.length}: ${removedIds.join(", ")}`);
+  console.log(`Kept    ${keptIds.length}: ${keptIds.join(", ")}`);
+
+  const missing = [...TO_DELETE].filter((id) => !removedIds.includes(id));
+  if (missing.length > 0) {
+    console.warn(`\nWARNING: did not find these IDs to delete: ${missing.join(", ")}`);
+    process.exit(1);
+  }
+}
+
+main().catch((err) => { console.error(err); process.exit(1); });
+```
+
+> Después de correr, también borra manualmente `public/products/<id>/` y la entry correspondiente en `scripts/product-images.json` para los IDs eliminados.
+
+#### `scripts/check-image-magic.ps1`
+
+Script PowerShell de validación: lee los primeros 4 bytes de cada `.jpg` en `public/products/` y reporta el formato real según magic bytes. Útil para detectar PNG/WEBP/HEIF disfrazados antes de deploy. **Full implementation**:
+
+```powershell
+Get-ChildItem -Path '<path-to-project>\public\products' -Recurse -File -Filter '*.jpg' | ForEach-Object {
+  $bytes = [System.IO.File]::ReadAllBytes($_.FullName) | Select-Object -First 4
+  $hex = ($bytes | ForEach-Object { $_.ToString('X2') }) -join ' '
+  $type = switch -Wildcard ($hex) {
+    '89 50 4E 47*' { 'PNG (mislabeled!)' }
+    'FF D8 FF*'    { 'JPEG' }
+    '52 49 46 46*' { 'WEBP/RIFF' }
+    '47 49 46 38*' { 'GIF' }
+    default        { 'UNKNOWN: ' + $hex }
+  }
+  $rel = $_.FullName.Substring($_.FullName.IndexOf('products'))
+  [PSCustomObject]@{ File = $rel; Type = $type }
+} | Format-Table -AutoSize | Out-String -Width 200
+```
+
+Reemplazá `<path-to-project>` con la ruta absoluta. Run: `powershell -ExecutionPolicy Bypass -File scripts/check-image-magic.ps1`. Para que pase el quality gate, TODOS los archivos deben reportar `JPEG`. Si aparece alguna fila `PNG (mislabeled!)` o `WEBP/RIFF` o `UNKNOWN`, correr `npm run images:normalize` y volver a verificar.
+
+> Magic bytes de referencia:
+> - JPEG: `FF D8 FF`
+> - PNG: `89 50 4E 47` (`.PNG`)
+> - WEBP: `52 49 46 46` (`RIFF`) seguido de `WEBP`
+> - HEIF/AVIF: `00 00 00 1C ftyp` (offset 4)
+> - GIF: `47 49 46 38`
+
+### Workflow per new product
+
+1. User pastes Amazon URL(s) (multiple in a single message OK)
+2. Extract ASINs (`/dp/<10 chars>`)
+3. Run `npx tsx scripts/fetch-amazon-puppeteer.ts <ASIN1> <ASIN2> ...` to get JSON with title/bullets/images
+4. Filter top 5 hi-res images (prefer `71*`, `81*`, `61*` prefixes)
+5. Add entry to `scripts/product-images.json`
+6. Run `npm run images:download`
+7. Run `npm run images:normalize`
+8. Visually verify hero image (read with vision) — ensure it's a clean product photo, not a marketing infographic ("Blazing Speed", "50% UP Power Efficiency", etc.) or lifestyle shot. Delete bad files and update JSON to remove their URLs.
+9. Add product entry to `lib/products.ts` with `image: "/products/<id>/0.jpg"` and `images: [...]` array
+10. Type-check: `npx tsc --noEmit`
+
+### Brand logos for BrandStrip
+
+Use Simple Icons CDN with `onError` fallback to wordmark — see Section 9 "Brand strip strategy". `next.config.ts` does NOT need to whitelist `cdn.simpleicons.org` because the BrandStrip uses plain `<img>` (not `<Image>`).
+
+### Quality gates
+
+- Every `Product.image` and `Product.images[]` resolves to `/products/<id>/<i>.jpg` (no Unsplash, no external CDNs)
+- All files in `public/products/` are real JPEG (verified via the `check-image-magic.ps1` magic byte script)
+- Hero image (0.jpg) of each product passes a vision check: shows the actual product, not an infographic
+- Image filenames stay `.jpg` even if original was PNG/WEBP/HEIF — normalize converts in place
 
 ---
 
 ## 5. Homepage sections (in order)
 
-1. **TopBar** — left: free-shipping promo, right: phone + WhatsApp. Brand-color background.
-2. **Header** — sticky, blurred white, logo, nav (Inicio, Productos, Categorías dropdown, Marcas, Nosotros, Contacto), **input de búsqueda** centrado (icono lucide `Search`, placeholder "Buscar productos, marcas, SKU…", al hacer Enter o submit redirige a `/buscar?q=<término>`; en mobile se colapsa a un icono que abre un sheet con el input), cart icon con item-count badge desde Zustand, sheet mobile menu. Todo el header es navegable por teclado: focus visible, `aria-label` en cada icono, `role="search"` en el form de búsqueda.
-3. **Hero** — split layout: left = badge ("Tienda oficial"), big H1 with accent-colored word, subhead, two CTAs ("Ver productos" / "Armar mi PC"), 4 trust badges (Garantía oficial, Envío 24h, Pago seguro, Soporte técnico). Right = product/setup hero image with floating cards (e.g., "8+ años de experiencia", "Tienda autorizada").
-4. **Trust stats row** — 4 big numbers (products in stock, brands, customers, years).
-5. **Featured categories** — 6 category cards with icons (Laptop, Cpu, Mouse, Monitor, Wifi, HardDrive) linking to `/productos?category=X`.
-6. **Featured products** — 4-card grid pulled via `getFeaturedProducts()`. "Ver todos" link.
-7. **Brand strip** — horizontal logos of supported brands (Asus, MSI, Logitech, NVIDIA, AMD, Intel…) on a muted band.
-8. **Why-us / comparison section** — 5-row table contrasting "Tienda oficial" vs "Tiendas informales" (Garantía, Producto original, Soporte post-venta, Factura electrónica, Envío seguro). Image collage on the other side.
-9. **Testimonials** — 3 customer quote cards with avatar, role (Gamer / Profesional IT / Streamer), 5-star rating.
-10. **PC builder CTA** (optional) — banner: "¿Vas a armar tu PC? Te asesoramos gratis" with WhatsApp deep link `https://wa.me/<phone>?text=Hola, quiero armar una PC`.
-11. **Benefits + CTA** — 4 benefit icons (Truck/Envío 24h, ShieldCheck/Garantía, RefreshCw/Cambios 7 días, Headphones/Soporte) on brand-primary background, big H2, two CTAs.
-12. **Footer** — grid de 5 columnas: marca+social, Productos, Empresa, Soporte, Contacto. Fila de medios de pago con **6 badges fijos en este orden**: Visa, Mastercard, Yape, Plin (todos los textos del footer en español). Copyright + enlaces a Privacidad y Términos.
+> **Aesthetic direction:** MSI-style dark cinematic, inspired by MSI laptop product pages (Katana 15, Cyborg 15). The page is dark from top to bottom (the only light moment is the FeaturedProducts section, where white product cards need contrast). Use animated background blobs, particle dots, oversized bold typography, gradient text on key words, marquee scrolls, and reveal-on-scroll for storytelling. NEVER use the generic "split hero with image right" layout — this is a gaming/tech retailer, not a corporate landing.
+
+1. **TopBar** — thin promo strip, free-shipping left, phone + WhatsApp right.
+2. **Header** — sticky, blurred white, logo, nav (Inicio, Productos, Categorías, Nosotros, Contacto), centered search input (lucide `Search` icon, placeholder "Buscar productos, marcas, SKU…", Enter redirects to `/buscar?q=…`; mobile collapses to icon → sheet), cart icon with badge from Zustand, sheet mobile menu. Full keyboard nav, `role="search"`, `aria-label` on icons.
+
+3. **Hero (cinematic dark)** — full-bleed `bg-[#050a14]` with `relative isolate overflow-hidden`. Layered:
+   - **3 animated blob backgrounds** (`.blob-cyan`, `.blob-violet`, `.blob-pink`) at low opacity drifting independently
+   - **Floating particles** (5 small dots that twinkle on staggered delays)
+   - **5% opacity grid pattern** overlay (`background-size: 44px 44px`, white lines)
+   - **Bottom vignette** (gradient fading to `#050a14`)
+   - 12-column grid: left col-span-6 with badge `tracking-[0.22em]` ("Tienda oficial · Lima"), oversized H1 (`text-5xl sm:text-6xl lg:text-7xl leading-[1.02]`) where ONE keyword uses `bg-gradient-to-r from-accent via-cyan-300 to-accent bg-clip-text text-transparent`, subhead in `text-white/70`, two CTAs (primary accent + outline glass `border-white/20 bg-white/5 backdrop-blur`), 4-icon trust row in compact list
+   - Right col-span-6: product hero image with absolutely-positioned glow ring behind (`-inset-4 rounded-[2rem] bg-gradient-to-tr from-accent/25 via-cyan-500/10 to-violet-500/20 blur-2xl`), floating spec cards at `-bottom-5 -left-5` and `-right-5 -top-5` with `bg-[#0a1424]/90 backdrop-blur`
+   - Scroll indicator at bottom-center with `animate-bounce` ChevronDown + uppercase "Scroll" label
+   - All decorative animations gated by `motion-reduce:hidden`
+
+4. **SpecMarquee** — NEW component. Thin dark band (`py-4 bg-[#050a14] border-y border-white/10`) with infinite horizontal marquee of trust promises (Envío 24h, Garantía oficial, Stock real, Soporte técnico, Factura SUNAT, Armado profesional). Each item: lucide icon in accent + uppercase text + accent slash separator. Items duplicated `[...ITEMS, ...ITEMS]` for seamless loop via `.marquee-track` CSS animation. With `prefers-reduced-motion`, falls back to `motion-reduce:flex-wrap motion-reduce:justify-center` so all items remain visible.
+
+5. **CategoryGrid (dark image-driven)** — `bg-[#0a0f1c] py-20 md:py-24` with subtle grid pattern. **NO iconitos centered in cards** — use real product photos. 6 cards in `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` with `aspect-[5/4]`:
+   - Full-bleed product image (laptop, GPU close-up, RGB keyboard, ultrawide monitor, router, NVMe SSD)
+   - Dark gradient overlay bottom (`bg-gradient-to-t from-[#050a14] via-[#050a14]/55 to-transparent`)
+   - Bottom-left text: tagline in accent uppercase `tracking-[0.2em]` + label in `font-display text-2xl md:text-3xl font-bold`
+   - Bottom-right: arrow button (`ArrowUpRight` in `bg-white/10 → bg-accent on group-hover`)
+   - Hover: image `scale-110` (500ms transition), accent line (`absolute bottom-0 h-1 w-0`) slides to `w-full`
+   - Each card wrapped in `RevealOnScroll` with staggered `delayMs={i * 70}`
+
+6. **Pillars (storytelling)** — NEW component. `bg-[#050a14] py-20 md:py-28` with grid pattern. Centered intro: eyebrow "Por qué <Company>" in accent caps + H2 "Tres cosas que hacemos en serio." Then 3 alternating left/right rows (`reverse?: true` toggles `lg:order-2` on the image col):
+   - **Performance**, **Garantía**, **Soporte** — each with eyebrow + H3 (keyword in cyan gradient `bg-clip-text`) + body + 2-stat grid `border-y border-white/10` + accent CTA button with arrow
+   - Image side: aspect-[4/3] with abs-positioned blur glow (`-inset-2 from-accent/25 via-cyan-500/10 blur-2xl`), "01" / "02" / "03" badge floating top-right in `bg-black/50 backdrop-blur`
+   - Both image and content use `RevealOnScroll`, content with `delayMs={120}` for slight stagger
+
+7. **FeaturedProducts** — KEPT in light theme (`bg-background`). The light section is a deliberate breathing moment after 5 dark sections — product cards are white internally and need contrast. 4-card grid via `getFeaturedProducts()`, "Ver todos" link top-right.
+
+8. **BrandStrip (dark marquee with real logos)** — `bg-[#050a14] py-20 border-y border-white/10`. Title small caps tracking-wide centered. Then horizontal marquee with **20-24 real brand logos**:
+   - Source: Simple Icons CDN at `https://cdn.simpleicons.org/<slug>/ffffff` — forces logos to pure white
+   - Logo size: `h-14 sm:h-20` (substantial, not thumbnail)
+   - Default opacity 60%, hover `opacity-100 scale-110`
+   - **Edge fade gradients** (left/right `pointer-events-none w-20 sm:w-40 bg-gradient-to-r from-[#050a14] to-transparent`) so logos appear to emerge from the dark — Apple/MSI carousel style. NEVER let logos collide with the section edge.
+   - **`onError` fallback** to styled wordmark when Simple Icons doesn't have the brand. Brands frequently removed for trademark: Logitech, Western Digital, EVGA, HyperX, Cooler Master, Sony. Component is `"use client"` because it tracks fail state per logo via `useState`.
+   - Optional per-brand `iconSrc` override (interface `Brand { name; slug?; iconSrc?; invert? }`). For brands with public SVG elsewhere (Sony at `vectorlogo.zone`), set `iconSrc` + `invert: true`. The `invert` flag applies `brightness-0 invert` to force any colored SVG to white silhouette.
+   - Brand list spans every category present in catalog: ASUS, MSI, Lenovo, HP, Acer, Gigabyte, NVIDIA, AMD, Intel, Razer, Logitech, Corsair, HyperX, SteelSeries, Sony, Samsung, LG, Kingston, Crucial, Western Digital, Seagate, TP-Link, Cooler Master, EVGA.
+
+9. **WhyUs (dark two-card comparison)** — DROP the 5-row table layout. Use 2 large cards side-by-side on `bg-[#0a0f1c] py-20 md:py-28` with grid pattern:
+   - Header: eyebrow "La diferencia" in accent + H2 "Tienda oficial vs. tienda informal" (second half in `text-white/40`) + subhead
+   - **Left card "Tienda oficial"** (recommended): `border-2 border-accent/40`, `bg-gradient-to-br from-accent/15 via-[#0a1424] to-[#0a1424]`, `shadow-[0_0_60px_rgba(0,168,212,0.15)]`. Header: cyan check icon-tile + "Recomendado" eyebrow + H3 "Tienda oficial". 5 benefits with cyan checks.
+   - **Right card "Tienda informal"** (risk): `border border-white/10 bg-[#0a1424]/40`. Header: muted X icon-tile + "Riesgo" eyebrow in white/30 + H3 "Tienda informal" in white/40. Same 5 items with red destructive X icons in muted text.
+   - Both use `RevealOnScroll` with second delayed by 120ms.
+
+10. **Testimonials (dark)** — `bg-[#0a0f1c] py-20 md:py-28` with grid pattern. Eyebrow "Comunidad" + H2 + subhead. 3 testimonial cards in `md:grid-cols-3`:
+    - Card: `bg-[#0a1424]/60 backdrop-blur border-white/10`, hover `border-accent/40 + shadow-[0_0_40px_rgba(0,168,212,0.15)]`
+    - Big absolute Quote icon `top-5 right-5 h-14 w-14 text-accent/20` (40% on hover)
+    - Stars + quote text in `text-white/85`
+    - Author with gradient avatar (`from-accent to-cyan-500`) + name in white + role in white/50
+    - Each in `RevealOnScroll` with `delayMs={i * 100}`
+
+11. **CTA (dark cinematic close)** — `bg-[#050a14] py-20 md:py-28` with blobs (cyan + violet) + 5% grid pattern:
+    - Centered: eyebrow "Listo para empezar" in accent caps + huge H2 (`text-4xl md:text-6xl leading-[1.05]`) with "build hoy" keyword in cyan gradient + subhead in white/60
+    - Two CTAs: accent primary with arrow + outline glass
+    - Below, separated by `border-t border-white/10`: 4-benefit row (`Truck`, `ShieldCheck`, `RefreshCw`, `Headphones`) each as icon-tile in `bg-white/5 border-white/10` + bold label + sub label in white/50
+    - Both blocks use `RevealOnScroll`, second delayed 180ms
+
+12. **Footer (dark, restructured)** — major redesign:
+    - **Top accent gradient line** (`h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent`)
+    - **Top contact strip**: 3-column grid using the `gap-px bg-white/5` divider trick (each cell `bg-[#070b14]`). WhatsApp / Email / Address. Each with icon-tile in `bg-accent/15 text-accent` + uppercase label + value. All clickable: `wa.me/<num>`, `mailto:`, Google Maps search URL.
+    - **Main grid** (`lg:grid-cols-12`): brand col `lg:col-span-5` with logo + description + "Seguinos" + 3 social icons in circles (`border-white/10 bg-white/5 → border-accent/40 bg-accent/10 on hover`, plus `-translate-y-0.5` lift).
+    - **Right col `lg:col-span-7`**: 3 link columns each with H3 having `tracking-[0.18em]` uppercase + accent underline (`absolute bottom-0 left-0 h-px w-8 bg-accent`). Columns: Productos / Empresa / Legal.
+    - **Social icons**: inline SVG components (lucide deprecated `Facebook`/`Instagram`/`Youtube` icons due to trademark in 2024-2025 — use local SVG paths). Define `FacebookIcon`, `InstagramIcon`, `YoutubeIcon` as named React components inside the file.
+    - **Payment chips strip** with 4 chips (VISA, Mastercard, Yape, Plin) at `text-[11px] tracking-wider`, separated by `border-t border-white/10 pt-8`.
+    - **Bottom bar darker** (`bg-[#04070d] border-t border-white/10`) with copyright + 3 inline links (Privacidad / Términos / Reclamaciones).
 
 ---
 
@@ -430,13 +996,103 @@ Use BRIEF colors. Suggested mapping for a tech brand:
 ```
 
 ### Visual rules
-- Headings use display font, body uses sans; H1 is 4xl/5xl/6xl responsive
+- Headings use display font, body uses sans; H1 is 4xl/5xl/6xl/7xl responsive (cinematic scale)
 - Sticky blurred header (`bg-white/95 backdrop-blur`)
-- Cards: `rounded-xl`, `shadow-lg`, hover `shadow-xl`, image hover `scale-105`
+- Cards: `rounded-xl/2xl`, `shadow-lg`, hover `shadow-xl`, image hover `scale-105` (or `scale-110` for category cards)
 - Buttons: primary = brand-primary bg, accent = brand-accent bg; size lg has `px-8`
-- Section padding: `py-20`; container `mx-auto px-4`
-- Animated decorative blurs in Hero (`absolute -top-40 ... rounded-full blur-3xl`)
-- Dark mode: provide `.dark` overrides; toggle is optional but tokens must support it
+- Section padding: `py-20 md:py-28` (cinematic)
+- Custom hex colors for the dark sections: `#050a14` (deepest, hero/CTA/marquees), `#0a0f1c` (sections like CategoryGrid/WhyUs/Testimonials), `#0a1424` (cards on dark sections)
+- Subtle 5% opacity grid pattern (44px or 60px squares) layered on dark sections via inline-style background-image
+- Dark mode tokens: `:root` has light, `.dark` has dark — but the homepage sections override to fixed dark hex regardless of theme (these are part of the brand aesthetic, not theme-dependent)
+
+### MSI motion library (in `app/globals.css`)
+
+The dark cinematic aesthetic depends on a small CSS animation library. Add these classes/keyframes (all gated behind `prefers-reduced-motion: reduce`):
+
+```css
+/* Drifting blobs that compose a "mesh gradient" background.
+   Each blob has its own period so they never repeat the same composition. */
+@keyframes drift-a { 0%,100% { transform: translate3d(-10%,-5%,0) scale(1); } 50% { transform: translate3d(15%,10%,0) scale(1.1); } }
+@keyframes drift-b { 0%,100% { transform: translate3d(5%,0%,0) scale(1.05); } 50% { transform: translate3d(-15%,12%,0) scale(1); } }
+@keyframes drift-c { 0%,100% { transform: translate3d(0%,5%,0) scale(1); } 50% { transform: translate3d(20%,-10%,0) scale(1.15); } }
+.blob-cyan, .blob-violet, .blob-pink {
+  position: absolute; border-radius: 9999px; filter: blur(80px);
+  pointer-events: none; will-change: transform;
+}
+.blob-cyan   { width: 40rem; height: 40rem; background: rgba(0,210,255,0.35);  top: -10rem; left: -10rem; animation: drift-a 18s ease-in-out infinite; }
+.blob-violet { width: 36rem; height: 36rem; background: rgba(139,92,246,0.30); bottom: -8rem; right: -8rem; animation: drift-b 22s ease-in-out infinite; }
+.blob-pink   { width: 28rem; height: 28rem; background: rgba(236,72,153,0.18); top: 30%;     left: 40%;   animation: drift-c 26s ease-in-out infinite; }
+
+/* Twinkling particles */
+@keyframes twinkle { 0%,100% { opacity: 0.2; transform: translateY(0); } 50% { opacity: 0.8; transform: translateY(-8px); } }
+.particle {
+  position: absolute; width: 3px; height: 3px; border-radius: 9999px;
+  background: rgba(0,210,255,0.6); box-shadow: 0 0 12px rgba(0,210,255,0.8);
+  animation: twinkle 4s ease-in-out infinite; pointer-events: none;
+}
+
+/* Conic-gradient sweeping border for focused/active cards */
+@keyframes spin-border { to { transform: rotate(360deg); } }
+.glow-border { position: relative; isolation: isolate; }
+.glow-border::before {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px;
+  background: conic-gradient(from 0deg, transparent, rgba(0,210,255,0.6), transparent 60%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: 0; transition: opacity 0.3s; z-index: -1;
+}
+.glow-border:hover::before { opacity: 1; animation: spin-border 4s linear infinite; }
+
+/* Reveal on scroll — base hidden state, JS adds .is-visible via IntersectionObserver */
+.reveal { opacity: 0; transform: translateY(24px);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  will-change: opacity, transform; }
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+/* Marquee scroll for spec strip + brand strip */
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee-track { animation: marquee 30s linear infinite; }
+
+/* Typewriter / boot-sequence reveal for product detail SKU */
+@keyframes type-reveal { from { width: 0; } to { width: 100%; } }
+@keyframes blink-caret { 50% { border-color: transparent; } }
+.boot-text { display: inline-block; overflow: hidden; white-space: nowrap;
+  border-right: 2px solid currentColor;
+  animation: type-reveal 1.4s steps(20,end) 0.4s both, blink-caret 0.7s step-end 6; }
+
+/* 3D tilt — children set --rx and --ry via pointermove handler */
+.tilt-3d { transform: perspective(1000px) rotateY(var(--ry,0deg)) rotateX(var(--rx,0deg)) translateZ(0);
+  transition: transform 0.15s ease-out; transform-style: preserve-3d; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+```
+
+### Reveal-on-scroll component
+
+Provide `components/ui/RevealOnScroll.tsx` — `"use client"` wrapper that uses `IntersectionObserver` with `threshold: 0.15, rootMargin: "0px 0px -10% 0px"` to add `.is-visible` once. Supports `delayMs` and `className` props. Unobserves after first reveal. Used throughout home sections for staggered entry.
+
+### Brand strip strategy (dark marquee with real logos)
+
+For the BrandStrip section, use real brand logos (no text wordmarks as the only solution).
+
+1. **Primary source**: Simple Icons CDN at `https://cdn.simpleicons.org/<slug>/ffffff` — returns SVG forced to white. Slugs are lowercase, no spaces, no hyphens.
+2. **Per-brand override**: each `Brand` entry can have an optional `iconSrc` URL (vectorlogo.zone, manufacturer CDN, etc.) and `invert: true` flag that applies `brightness-0 invert` to force colored SVGs to white silhouette.
+3. **`onError` fallback**: Simple Icons periodically removes brands when trademark holders complain. When the SVG fails to load, swap to a styled wordmark (`font-display text-3xl sm:text-4xl font-bold uppercase tracking-[0.18em]`) so the strip never shows broken icons. The component must be `"use client"` to track per-instance fail state via `useState`.
+4. **Use `<img>` not `<Image>`**: SVGs don't benefit from Next image optimization, and each logo has different aspect ratio so fixed `width`/`height` would distort. Suppress eslint with `// eslint-disable-next-line @next/next/no-img-element`.
+
+### Iconography (lucide-react)
+
+Map each concept to a specific icon: `Cpu`, `Laptop`, `Monitor`, `Mouse`, `Keyboard`, `HardDrive`, `Wifi`, `Headphones`, `Cable`, `Zap` (gaming/RGB), `Shield`, `ShieldCheck`, `Truck`, `RefreshCw`, `Award`, `Star`, `Phone`, `MessageSquare`, `Search`, `AlertTriangle`, `Quote`, `ArrowRight`, `ArrowUpRight`, `ChevronDown`, `MapPin`, `Mail`, `MessageCircle`.
+
+> **Note on lucide brand icons**: `Facebook`, `Instagram`, `Youtube`, `Twitter` icons are deprecated in lucide-react (trademark concerns). Define inline SVG components in the file that uses them (e.g., `Footer.tsx` defines `FacebookIcon`, `InstagramIcon`, `YoutubeIcon` at the bottom of the file).
 
 ### Iconography (lucide-react)
 Map each concept to a specific icon: `Cpu`, `Laptop`, `Monitor`, `Mouse`, `Keyboard`, `HardDrive`, `Wifi`, `Headphones`, `Cable`, `Zap` (gaming/RGB), `Shield`, `ShieldCheck`, `Truck`, `RefreshCw`, `Award`, `Star`, `Phone`, `MessageSquare`, `Search`, `AlertTriangle`.
@@ -477,6 +1133,58 @@ Map each concept to a specific icon: `Cpu`, `Laptop`, `Monitor`, `Mouse`, `Keybo
 - Teléfono peruano: validar con regex `/^\+?51?\s?9\d{2}\s?\d{3}\s?\d{3}$/`. Mostrar formato `+51 9XX XXX XXX`.
 - WhatsApp deep links: `https://wa.me/51<9 digitos>?text=...` (sin `+` ni espacios).
 - Pluralización (`Intl.PluralRules`): "1 producto" / "2 productos", "1 cuota" / "12 cuotas".
+
+### Dialecto: español neutro peruano (NO voseo argentino)
+
+**TODO el copy visible debe estar en español peruano neutro con formas tú.** NO usar voseo argentino (vos / mirá / pedinos / acá). Esta restricción aplica a: nav, botones, formularios, mensajes de error, validación zod, toasts, metadatos OG/Twitter, emails, página 404, descripciones de productos, FAQ, T&C, privacidad, libro de reclamaciones.
+
+Tabla de sustituciones (NUNCA usar la columna izquierda):
+
+| ❌ Voseo (argentino)   | ✅ Tú (peruano neutro) |
+|---|---|
+| acá                   | aquí                  |
+| mirá                  | mira                  |
+| empezá                | empieza               |
+| pedí / pedinos        | pide / pídenos        |
+| elegí                 | elige                 |
+| explorá               | explora               |
+| armá                  | arma                  |
+| escribí / escribinos  | escribe / escríbenos  |
+| seguinos              | síguenos              |
+| llevate               | llévate               |
+| fijate                | fíjate                |
+| mandá / mandanos      | envía / envíanos      |
+| abrí                  | abre                  |
+| escaneá               | escanea               |
+| ingresá               | ingresa               |
+| copiá                 | copia                 |
+| verificá              | verifica              |
+| conservá              | conserva              |
+| volvé                 | vuelve                |
+| intentá               | intenta               |
+| registrá              | registra              |
+| agregá                | agrega                |
+| conocé                | conoce                |
+| tenés                 | tienes                |
+| podés                 | puedes                |
+| querés                | quieres               |
+| necesitás             | necesitas             |
+| considerás            | consideras            |
+| sabés                 | sabes                 |
+| confiás               | confías               |
+| aceptás               | aceptas               |
+| buscás                | buscas                |
+| fierros               | hardware / componentes|
+
+Marcadores argentinos prohibidos: `dale`, `che`, `posta`, `re-X`, `boludo`. Permitidos en contextos casuales por audiencia peruana: `al toque`, `chévere` (pero para tono retail premium prefiere neutro).
+
+Antes de hacer commit, correr esta validación:
+
+```bash
+grep -rEn "\b(podés|hacés|sabés|tenés|querés|necesitás|comprás|empezás|mirá|empezá|pedí|pedinos|elegí|escribí|escribinos|abrí|escaneá|ingresá|copiá|verificá|conservá|seguinos|aceptás|considerás|confiás|conocé|explorá|armá|intentá|registrá|agregá|buscás|volvé|fierros|acá)\b" app components lib
+```
+
+Cualquier match en archivos user-facing es un bug y debe corregirse.
 
 ---
 
@@ -536,17 +1244,22 @@ app/
 
 components/
   layout/Header.tsx       layout/Footer.tsx       layout/TopBar.tsx
-  layout/SearchInput.tsx  layout/MobileNav.tsx
-  home/Hero.tsx           home/TrustStats.tsx     home/CategoryGrid.tsx
-  home/FeaturedProducts.tsx home/BrandStrip.tsx   home/WhyUs.tsx
+  layout/SearchInput.tsx  layout/MobileNav.tsx    layout/CookieBanner.tsx
+  home/Hero.tsx           home/SpecMarquee.tsx    home/CategoryGrid.tsx
+  home/Pillars.tsx        home/FeaturedProducts.tsx
+  home/BrandStrip.tsx     home/WhyUs.tsx
   home/Testimonials.tsx   home/CTA.tsx
-  products/ProductCard.tsx  products/ProductGrid.tsx  products/ProductGallery.tsx
-  products/SpecsTable.tsx   products/InstallmentBadge.tsx
+  products/ProductCard.tsx     products/ProductGrid.tsx
+  products/ProductGallery.tsx  products/StickyPurchaseBar.tsx
+  products/SpecsTable.tsx      products/InstallmentBadge.tsx
+  products/AddToCartControls.tsx
   cart/CartItem.tsx       cart/CartSummary.tsx       cart/IgvBreakdown.tsx
   checkout/ShippingForm.tsx checkout/PaymentForm.tsx checkout/OrderSummary.tsx
   checkout/IzipayEmbedded.tsx                          // wrapper del iframe oficial
   checkout/TermsCheckbox.tsx
+  contact/ContactForm.tsx
   complaint/ComplaintForm.tsx
+  ui/RevealOnScroll.tsx                                // IntersectionObserver wrapper
   ui/* (shadcn primitives)
 
 lib/
@@ -563,10 +1276,22 @@ lib/
 
 prisma/
   schema.prisma
+
+scripts/
+  fetch-amazon-puppeteer.ts       // puppeteer-extra + stealth — extrae title/price/imgs/bullets de ASINs Amazon
+  download-product-images.ts      // descarga URLs de product-images.json a public/products/<id>/
+  normalize-product-images.ts     // sharp-based: PNG/WEBP/HEIF/AVIF → real JPEG q90 mozjpeg in-place
+  audit-product-images.ts         // emite tabla con todos los productos y origen de su imagen
+  delete-products.ts              // utilidad: elimina productos de products.ts por array de IDs
+  product-images.json             // map productId → sourceUrls[]
+  check-image-magic.ps1           // PowerShell util: verifica magic bytes de los archivos en public/products/
+
 public/
   logo.svg  icon.svg  og-image.jpg
   payments/yape.svg  payments/plin.svg  payments/visa.svg  payments/mastercard.svg
   icons/libro-reclamaciones.svg
+  products/<id>/0.jpg             // imágenes locales reales descargadas vía pipeline (sección 17)
+
 .env.example
 ```
 
@@ -611,7 +1336,7 @@ Before declaring the task done, verify each box:
 - [ ] Adding a product to cart updates the header badge and persists across reloads
 - [ ] Cart page total updates when shipping zone changes
 - [ ] Checkout flow: shipping → payment → processing (≈3s) → success with order ID
-- [ ] All 16+ seed products visible on `/productos`, filterable by category
+- [ ] All 50+ seed products visible on `/productos`, filterable by category, distribuidos en al menos 7 de las 10 categorías
 - [ ] Product detail shows tabs (Descripción / Specs / Caja / Garantía), gallery thumbnails switch image, related products render
 - [ ] Footer muestra los 4 badges de pago: Visa, Mastercard, Yape, Plin
 - [ ] Checkout muestra las 6 opciones de pago explícitas (Yape, Plin, Visa crédito, Mastercard crédito, Visa débito, Mastercard débito)
@@ -664,6 +1389,37 @@ Before declaring the task done, verify each box:
 - [ ] Order ID format: `${COMPANY_PREFIX}-<base36>-<rand6>` derivado de env, no hardcodeado
 - [ ] Si falta `NEXT_PUBLIC_COMPANY_PREFIX`, el server lanza error en boot
 
+### Estética MSI (homepage dark cinematic)
+- [ ] La home tiene 12 secciones en el orden de Sección 5 (Hero → SpecMarquee → CategoryGrid → Pillars → FeaturedProducts → BrandStrip → WhyUs → Testimonials → CTA + Footer)
+- [ ] El Hero tiene fondo `#050a14` con blobs animados (cyan/violet/pink), partículas, grid pattern al 5%, y H1 con keyword en gradiente cyan
+- [ ] El SpecMarquee es un infinite scroll horizontal usando `.marquee-track`, con fallback `flex-wrap` para `prefers-reduced-motion`
+- [ ] El CategoryGrid usa fotos reales de producto por categoría (no iconitos), con hover scale + accent line
+- [ ] El componente `Pillars` tiene 3 secciones storytelling alternadas (left/right) con `RevealOnScroll` y stats grid
+- [ ] El BrandStrip tiene logos reales vía Simple Icons CDN con `onError` fallback a wordmark, edge fade gradients en izq/der
+- [ ] WhyUs es un comparador de 2 cards (oficial accent / informal muted), NO una tabla 5x3
+- [ ] Testimonials usa cards traslúcidas dark con Quote icon de fondo y avatar gradient
+- [ ] CTA tiene blobs + grid + H2 con gradient text + 4-benefit row separado por `border-t white/10`
+- [ ] Footer tiene top contact strip de 3 cells (WhatsApp/Email/Address), columnas con underline accent (`h-px w-8 bg-accent`), social icons en círculos custom (no lucide deprecated icons)
+- [ ] Todas las animaciones decorativas se desactivan con `prefers-reduced-motion`
+- [ ] `RevealOnScroll` component existe en `components/ui/RevealOnScroll.tsx` y se usa en Pillars, CategoryGrid, WhyUs, Testimonials, CTA
+
+### Lenguaje peruano (NO voseo)
+- [ ] Cero matches del grep de voseo en `app/`, `components/`, `lib/` (ver tabla en Sección 11)
+- [ ] Imperativos en tú: `mira`, `empieza`, `pídenos`, `escribe`, `escanea`, `ingresa`, `verifica` — NUNCA `mirá`, `empezá`, `pedinos`, etc.
+- [ ] Adverbios: `aquí` (no `acá`), `aquí te contamos`, `empieza aquí`
+- [ ] Cero markers argentinos (`dale`, `che`, `posta`, `re-X`, `boludo`, `fierros`)
+
+### Pipeline de imágenes (Sección 4.5)
+- [ ] `scripts/fetch-amazon-puppeteer.ts` existe y usa `puppeteer-extra-plugin-stealth`
+- [ ] `scripts/download-product-images.ts` lee de `scripts/product-images.json` y escribe a `public/products/<id>/`
+- [ ] `scripts/normalize-product-images.ts` convierte cualquier formato en `.jpg` falso a JPEG real con sharp
+- [ ] `scripts/audit-product-images.ts` reporta source de cada imagen (local/unsplash/other) — debe mostrar **0 unsplash** en producción
+- [ ] CERO referencias a `images.unsplash.com` en `Product.image` o `Product.images[]` (todos los paths son `/products/<id>/N.jpg`)
+- [ ] `next.config.ts` `remotePatterns` puede mantener `unsplash.com` y `pexels.com` por compatibilidad con assets decorativos no-producto, pero NO se usan para imágenes de producto en producción
+- [ ] Hero (0.jpg) de cada producto pasa verificación visual: muestra el producto real, no infografías marketing ("Blazing Speed", "RTX 3070 Ti" overlay, etc.) ni lifestyle shots con personas como sujeto principal
+- [ ] Todos los archivos `.jpg` en `public/products/` son JPEG real (no PNG/WEBP/HEIF disfrazados) — verificable con `check-image-magic.ps1`
+- [ ] `package.json` tiene scripts: `images:download`, `images:normalize` (opcional `images:audit`)
+
 ---
 
 ## 15. Style of code
@@ -681,7 +1437,9 @@ Before declaring the task done, verify each box:
 
 1. The full project as described above
 2. A short `README.md` explaining: prerequisites, install, dev, env vars, how to swap mock products for Prisma, how to wire the real payment gateway, deployment notes (Vercel + Neon/Supabase)
-3. Seed data sized to look like a real catalog (16+ products, 4+ brands per category where applicable)
+3. Seed data sized to look like a real catalog (50+ products, distribuidos en al menos 7 de las 10 categorías, con marcas reales reconocidas: ASUS, MSI, Razer, Logitech, Sony, JBL, Apple, Dell, Lenovo, HP, Acer, Gigabyte, AMD, Intel, NVIDIA, Samsung, WD, Crucial, TP-Link, Kingston, etc.)
 4. Working sandbox payment with test card numbers visible on the payment form
+5. Pipeline de imágenes funcional: `npm run images:download && npm run images:normalize` produce un catálogo con 100% imágenes locales reales (cero placeholders Unsplash en producción)
+6. `BrandStrip` con logos reales vía Simple Icons CDN + onError fallback
 
 Begin. Confirm the BRIEF values you'll use in one short paragraph, then build the entire project end-to-end. Do not ask follow-up questions — pick reasonable defaults from the BRIEF and proceed.
