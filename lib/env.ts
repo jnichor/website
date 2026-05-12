@@ -24,6 +24,10 @@ const envSchema = z.object({
   COMPANY_LEGAL_NAME: z.string().min(1),
   COMPANY_RUC: z.string().regex(/^\d{11}$/, "RUC debe ser de 11 dígitos"),
   COMPANY_FISCAL_ADDRESS: z.string().min(1),
+
+  GEMINI_API_KEY: z
+    .string()
+    .regex(/^AIza[\w-]{35}$/, "GEMINI_API_KEY debe tener formato AIza... (39 chars)"),
 });
 
 // On the client we only see NEXT_PUBLIC_* vars — keep validation server-side

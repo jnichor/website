@@ -9,6 +9,7 @@ import { CookieBanner } from "@/components/layout/CookieBanner";
 import { FloatingWhatsApp } from "@/components/layout/FloatingWhatsApp";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { ChatWidget } from "@/components/chatbot/ChatWidget";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -130,6 +131,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main id="main">{children}</main>
           <Footer />
           <FloatingWhatsApp />
+          <ChatWidget />
           <ScrollToTop />
           <CookieBanner />
           <Toaster position="top-right" richColors />
