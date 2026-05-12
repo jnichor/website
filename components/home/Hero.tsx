@@ -76,7 +76,7 @@ export function Hero() {
               className="border-white/20 bg-white/5 text-white backdrop-blur hover:bg-white/10 hover:text-white"
             >
               <Link
-                href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "51999888777"}?text=${encodeURIComponent(
+                href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "51917056909"}?text=${encodeURIComponent(
                   "Hola, quiero armar una PC"
                 )}`}
                 target="_blank"

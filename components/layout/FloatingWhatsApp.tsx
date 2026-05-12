@@ -1,6 +1,6 @@
 import { whatsappLink } from "@/lib/utils";
 
-const DEFAULT_PHONE = "51999888777";
+const DEFAULT_PHONE = "51917056909";
 const DEFAULT_MESSAGE =
   "Hola, tengo una consulta sobre los productos de NovaTech.";
 

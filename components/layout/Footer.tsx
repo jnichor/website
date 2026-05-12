@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Cpu, Mail, MapPin, MessageCircle } from "lucide-react";
 
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "NovaTech Hardware";
-const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "51999888777";
+const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "51917056909";
 
 export function Footer() {
   return (
@@ -39,7 +39,7 @@ export function Footer() {
                 WhatsApp
               </p>
               <p className="truncate font-semibold text-white">
-                +51 999 888 777
+                +51 917 056 909
               </p>
             </div>
           </a>

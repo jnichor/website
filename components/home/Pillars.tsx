@@ -66,7 +66,7 @@ const PILLARS: Pillar[] = [
       { value: "8+", label: "Años de experiencia" },
     ],
     ctaLabel: "Hablar con un asesor",
-    ctaHref: `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "51999888777"}?text=${encodeURIComponent(
+    ctaHref: `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "51917056909"}?text=${encodeURIComponent(
       "Hola, necesito asesoría"
     )}`,
   },

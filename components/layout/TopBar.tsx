@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Phone, Truck, MessageCircle } from "lucide-react";
 
-const PHONE = "+51 999 888 777";
-const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "51999888777";
+const PHONE = "+51 917 056 909";
+const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "51917056909";
 
 export function TopBar() {
   return (

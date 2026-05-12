@@ -105,7 +105,7 @@ export default async function ProductDetailPage({ params }: Params) {
   const whatsappLinkText = encodeURIComponent(
     `Hola, tengo una consulta sobre ${product.name} (SKU ${product.sku})`
   );
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "51999888777";
+  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "51917056909";
   const inStock = product.inStock && (product.stockQty ?? 0) > 0;
 
   // Pair highlights with UNIQUE secondary images. No cycling, no repeats —

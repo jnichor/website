@@ -7,8 +7,8 @@ export const metadata: Metadata = {
   description: "Atención al cliente, soporte técnico y ventas corporativas. Lince, Lima.",
 };
 
-const PHONE = "+51 999 888 777";
-const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "51999888777";
+const PHONE = "+51 917 056 909";
+const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "51917056909";
 const EMAIL = "ventas@novatechhardware.pe";
 const ADDRESS = "Av. Arequipa 1234, Lince, Lima, Perú";
 

@@ -85,7 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     logo: `${SITE_URL}/logo.svg`,
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: "+51 999 888 777",
+      telephone: "+51 917 056 909",
       contactType: "customer service",
       areaServed: "PE",
       availableLanguage: ["Spanish"],

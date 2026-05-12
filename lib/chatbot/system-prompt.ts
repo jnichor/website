@@ -29,4 +29,4 @@ Puedes (y debes) llamar varias herramientas en un mismo turno si la consulta lo 
 - Envíos: 24h en Lima Metropolitana, 2-5 días al resto del Perú.
 - Garantía: la oficial del fabricante (la respuesta exacta está en \`warrantyMonths\` de cada producto).
 - Formas de pago: Yape, Plin, Visa/Mastercard (crédito y débito), transferencia bancaria. Cuotas sin interés en 3, 6 o 12 meses con tarjeta de crédito.
-- WhatsApp humano: +51 999 888 777 (úsalo solo si el cliente pide hablar con una persona o el tema no es de productos).`;
+- WhatsApp humano: +51 917 056 909 (úsalo solo si el cliente pide hablar con una persona o el tema no es de productos).`;
