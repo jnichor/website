@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { gemini, classifyComplexity, modelIdFor } from "@/lib/gemini";
+import { getGeminiClient, classifyComplexity, modelIdFor } from "@/lib/gemini";
 import { SYSTEM_PROMPT } from "@/lib/chatbot/system-prompt";
 import { CHATBOT_TOOLS, executeTool } from "@/lib/chatbot/tools";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
@@ -53,11 +53,17 @@ export async function POST(request: Request) {
 
   const tier = classifyComplexity(lastMessage.content);
 
-  const model = gemini.getGenerativeModel({
-    model: modelIdFor(tier),
-    systemInstruction: SYSTEM_PROMPT,
-    tools: [{ functionDeclarations: CHATBOT_TOOLS }],
-  });
+  let model;
+  try {
+    model = getGeminiClient().getGenerativeModel({
+      model: modelIdFor(tier),
+      systemInstruction: SYSTEM_PROMPT,
+      tools: [{ functionDeclarations: CHATBOT_TOOLS }],
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Configuración de Gemini inválida";
+    return NextResponse.json({ error: message }, { status: 503 });
+  }
 
   const history = body.messages.slice(0, -1).map((m) => ({
     role: m.role,

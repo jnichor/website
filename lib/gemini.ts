@@ -1,14 +1,29 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { env } from "./env";
 
 const globalForGemini = globalThis as unknown as {
-  gemini?: GoogleGenerativeAI;
+  geminiClient?: GoogleGenerativeAI;
 };
 
-export const gemini =
-  globalForGemini.gemini ?? new GoogleGenerativeAI(env.GEMINI_API_KEY);
+// Lazy init: avoid touching process.env at module-evaluation time so that
+// /api/chat doesn't drag a hard env dependency into Next's build-time
+// "Collecting page data" phase. The check runs on the first runtime request.
+export function getGeminiClient(): GoogleGenerativeAI {
+  if (globalForGemini.geminiClient) return globalForGemini.geminiClient;
 
-if (process.env.NODE_ENV !== "production") globalForGemini.gemini = gemini;
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error(
+      "GEMINI_API_KEY no está configurada. Agrégala en Vercel → Settings → Environment Variables.",
+    );
+  }
+  if (!/^AIza[\w-]{35}$/.test(apiKey)) {
+    throw new Error("GEMINI_API_KEY tiene un formato inválido. Debe empezar con AIza y tener 39 caracteres.");
+  }
+
+  const client = new GoogleGenerativeAI(apiKey);
+  if (process.env.NODE_ENV !== "production") globalForGemini.geminiClient = client;
+  return client;
+}
 
 export type ModelTier = "flash" | "pro";
 
